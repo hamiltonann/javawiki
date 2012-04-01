@@ -498,12 +498,12 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			  <configuration>
 			    <systemProperties>
 			      <property>
-			        <name>catalina.home</name><!-要設定系統變數名稱-->
-			        <value>${project.build.directory}</value><!-把這個變數指到輸出目錄-->
+			        <name>catalina.home</name><!--要設定系統變數名稱-->
+			        <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
 			      </property>
 			      <property>
-			        <name>jboss.server.home.dir</name><!-要設定系統變數名稱-->
-			        <value>${project.build.directory}</value><!-把這個變數指到輸出目錄-->
+			        <name>jboss.server.home.dir</name><!--要設定系統變數名稱-->
+			        <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
 			      </property>
 			    </systemProperties>
 			    <suiteXmlFiles>
