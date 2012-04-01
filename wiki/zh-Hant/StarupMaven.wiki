@@ -297,7 +297,8 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 				<version>2.12</version>
 				<configuration>
 					<suiteXmlFiles>
-					<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
+						<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
 					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 				</plugin>
