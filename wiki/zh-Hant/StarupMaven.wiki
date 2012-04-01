@@ -641,9 +641,9 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 								<configuration>
 									<archiveDirectory></archiveDirectory>
 									<includes>
-										<include>${project.build.directory}/*.apk</include><!-要簽署的apk-->
+										<include>${project.build.directory}/*.apk</include><!--要簽署的apk-->
 									</includes>
-									<keystore>${somewhare}/keystorefile</keystore><!-key store檔案的所在路徑-->
+									<keystore>${somewhare}/keystorefile</keystore><!--key store檔案的所在路徑-->
 									<storepass>key-store_password</storepass><!--Key sotre 的密碼--->
 									<!--keypass>密碼</keypass --> <!-如果使用的key有密碼的話--->
 									<alias>key's alias name</alias><!--加簽所使用的 alias-->
@@ -678,7 +678,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 	          <configuration>
 	            <webResources>
 	              <resource>
-	                <directory>JbossEnv</directory><!-引用的資源目錄-->
+	                <directory>JbossEnv</directory><!--引用的資源目錄-->
 	                <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
 	              </resource>
 	            </webResources>
@@ -697,7 +697,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 	          <configuration>
 	            <webResources>
 	              <resource>
-	                <directory>tomcatEnv</directory><!-引用的資源目錄-->
+	                <directory>tomcatEnv</directory><!--引用的資源目錄-->
 	                <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
 	              </resource>
 	            </webResources>
