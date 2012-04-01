@@ -233,7 +233,7 @@ mvn compiler:compile
 
 
 == Maven pahse ==
-之前說過goal可是設定屬於某個phase，而phase則可組成[http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference lifecycle](生命週期)，在Maven有三個LifeCycle，分別是*clean*、*default*與*site*，
+之前說過goal可是設定屬於某個phase，而phase則可組成[http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Lifecycle_Reference lifecycle](生命週期)，在Maven有三個LifeCycle，分別是 *clean* 、 *default *與 *site* ，
 clean周期負責Project的清理，default周期負責Project的建置而site周期則是負責產生Project的文檔。
 例如執行 "mvn package" 時，因為它是屬於 defulat 這個life cycle，所以從 phase validate 到 package 的所有相關的Goals都會被執行
 
