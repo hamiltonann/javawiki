@@ -1,0 +1,23 @@
+#summary 使用Cordova(Phonegap)迅速建立Andoird程式
+#labels Featured,Phase-Implementation
+
+= 簡介 =
+App程式對於持續投注在與客戶直接互動的公司來說是一個新的課題，可能公司已經投入不少經費或雇用了專門人員關注在Web開發上。
+而App的興起對既有的Web開發人員或公司都會是一個新的挑戰。是投入更多的經費? 或者是雇用新的人(或付出成本讓既有人員Upgrade)?
+不幸的是，光是App開發至少又有兩大陣營 - Apple 與 Andoird，
+為了最小化開發成本，於是有人提出了讓Web程式直接變成App，於是乎有了[http://phonegap.com/ PhoneGap]與[http://www.appcelerator.com/ Titanium Appcelerator]的出現。
+
+由於我已經用[http://phonegap.com/ PhoneGap]開發了一個專案，所以我要就它來說明開發的相關經驗，讓後來者能更快導入並降低成本。
+[http://phonegap.com/ PhoneGap]目前已經由Adobe捐給Apache，因為PhoneGap已經是註冊商標，所以改名為[http://incubator.apache.org/cordova/ Cordova]，
+但由於Cordova尚在孵育階段，所以有些資料或下載仍須不時到兩個網站看看。
+
+== 開始之前 ==
+在使用這種模式開發App之前，您必須先思考幾個問題
+<dl>
+  <dt>執行速度</dt>
+  <dd>用App來執行Web程式，勢必不如原生(Native)的速度</dd>  
+  <dt>低階存取</dt>
+  <dd>HTML5目前已提供了若干硬體存取的功能，但想要全面應用低階存取，那是不可能的(除非針對各平台寫Plugin程式)，例如存取USB</dd>
+  <dt>程式碼放在那裡</dt>
+  <dd>如果程式是靜態的內容，那可以把所有的Web程式直接包入App內，那麼除了降低開發門檻外，那就發揮不了PhoneGap的優勢</dd>
+</dl>
