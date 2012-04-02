@@ -1,4 +1,4 @@
-﻿#summary 開始使用Maven
+#summary 開始使用Maven
 #labels Featured,Phase-Implementation
 
 開始使用Maven是因為受夠了每次開始一個Project，都要重新開始撰寫
@@ -157,7 +157,7 @@ Project目錄
 一開始的時候，我們執行 "mvn archetype:generate" 建立Project，mvn 後面接的指令 叫 goal由  
 "前置字:識別字" 表示要執行的作業。這些執業作業(命令)是由所謂的 plugin所提供，plugin是一種專供
 Maven本身使用的Library，同一個plugin通常使用同一前置字，然後本身會帶有說明提供那些作業的自我解說檔(metadata)，
-通常這個自我解說檔，也會定義每種作業隸屬於那種[#Maven_pahse phase](作業階段)；Maven本身早已知道許許多多的goal的定義，
+通常這個自我解說檔，也會定義每種作業隸屬於那種[#Maven_pahse phase](作業階段)；Maven本身[http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Built-in_Lifecycle_Bindings 早已知道]許許多多的goal的定義，
 當Maven執行特定的 goal時，缺少的Plugin，Maven就會自動去Repository下載相關的檔案。
 
 Maven 的指令可以串接，例如以下指令
