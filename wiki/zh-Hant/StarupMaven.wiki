@@ -168,7 +168,7 @@ mvn clean package javadoc:javadoc exec:exec
 
 plugin的定義結構通常如下
 {{{
-<pom>
+<project ...>
 	...
 	<build>
 		<plugins>
@@ -186,7 +186,7 @@ plugin的定義結構通常如下
 		...
 	<build>
 	...
-</pom>
+</project>
 }}}
 
 
@@ -263,7 +263,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 
 === Compile的設定	===
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -278,7 +278,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 您會發現，其實這段省略也沒有關係，因為Maven[http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Built-in_Lifecycle_Bindings 內定]的compile，就是依靠這個[http://maven.apache.org/plugins/maven-compiler-plugin plugin]來作業，
 而compile已經預設好很多的[http://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html 預設變數]，所以我們只要在`<properties`>，將該有的變數設定好就可以了。
@@ -288,7 +288,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 
 因為我不用JUnit，所以我會設定TestNG
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -304,7 +304,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 				</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 
 
@@ -312,7 +312,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 
 像GWT用於Client Side Code的Liberary，明確要求要把源碼包入jar檔內，所以要把Source Code與gwt.xml一起包到jar檔內
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<resources>
 			<resource>
@@ -330,13 +330,13 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</resource>
 		</resources>
 	</build>
-</pom>
+</project>
 }}}
 
 
 === 建立可執行Jar ===
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -354,13 +354,13 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 
 
 === 建立單一可執行Jar(把所有Library一起打成一包) ===
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -380,13 +380,13 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 
 
 === 直接執行程式 ===
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -404,7 +404,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 設定好後便可以以 "mvn exec:exec"執行程式
 
@@ -415,7 +415,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 當然您也可以執行 "mvn compile exec:exec"來解決這個問題，而另外一種方式就是載 exec:exec 關聯到 test 這個 phase，
 所以當我們執行 "mvn test" 時，就會先進行 compile然後再執行 "exec:exec"設定如下
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -441,7 +441,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 
 
@@ -449,7 +449,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 之前建立單一可執行Jar，並不會把Jar裡面的META-INF一起包進去，可是像Spring的把Schma等相關資料都放在META-INFO內，
 所以必須使用其它的plugin一起將這些資料包進去，並設定關聯到"package" phase
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -480,7 +480,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
 
 === 系統變數的問題 ====
@@ -488,7 +488,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 所以我們可以在log4j.xml或是logback.xml內直接將appender log file輸出到 ${catalina.home}/log/myweb.log (或是${project.build.directory}/logs/myweb.log)，
 但是當我們進行單元測試時，開發環境下根本不認識這兩個變數，所以我們必須設定這兩個變數並且將之指到某個特定的目錄下。
 {{{
-<pom ...>
+<project ...>
 	<build>
 		<plugins>
 			<plugin>
@@ -513,14 +513,63 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			</plugin>
 		</plugins>
 	</build>
-</pom>
+</project>
 }}}
+
+== 組態管理 ==
+也許您不是一個人寫程式，那麼組態管理(Software Configuration Management)就是必須的，當然也許您的系統已經裝有tortoisesxxx
+這類的視覺化管理程式，如果僅僅只裝了svn或是git的client程式，Maven也提供了相關的Plugin以簡化整個管理作業
+以[http://subversion.apache.org/ SubVersion]為例，我們僅僅須要一個簡單的pom.xml就可以了
+{{{ 
+<project ...>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>您的單位或組識</groupId>
+  <artifactId>專案名稱</artifactId>
+  <version>版本</version>
+  <packaging>pom</packaging>
+  <scm>
+    <url>http://yourSvnHost:port/.../</url><!--可直接檢視Repository的網址-->
+    <connection>scm:svn:http://yourSvnHost:port/.../</connection><!--Svn網址(port若是80可省略，也許只能Checkout)，如果是git換成scm:git:git://yourSvnHost:port/.../-->
+    <developerConnection>scm:svn:http://yourSvnHost:port/.../</developerConnection><!--開發人員所用的Svn網址，如果是git換成scm:git:git://yourSvnHost:port/.../-->
+  </scm>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-plugin</artifactId>
+        <version>1.6</version>
+        <!-- Checkout之後要執行的Goal -->
+        <configuration>
+          <goals>package</goals><!--給scm:bootstrap goal使用，checkout後立即執行 package goal-->
+          <connectionType>developerConnection</connectionType><!--預設是connection，這裡換成開發人員-->
+          <!--username>svn帳號</username-->
+          <!--password>svn密碼</password-->
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>  
+</project>
+}}}
+如此我們可以執行scm plugin相關的[http://maven.apache.org/scm/maven-scm-plugin/plugin-info.html goals]了。
+scm通常有帳號/密碼的問題，當然直接寫在pom.xml內不是不行，但這跟全世界公開有何不同?
+所以我建議最好設定在x:\maven\conf\settings.xml的servers標籤下增加如下
+{{{   
+<servers>  
+  <server>
+    <id>yourSvnHost:port</id>
+    <username>svn帳號</username>
+    <password>svn密碼</password>
+  </server>
+  ...
+</servers>
+}}}
+執行 "mvn scm:bootstrap" 您可以發現程式不但下載，且立即執行打包作業
 
 == 版本衝突管理 ==
 
 maven用久了，您就會發現這個問題：比如說您的pom 同時引用了如下：
 {{{
-<pom ...>
+<project ...>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -533,7 +582,7 @@ maven用久了，您就會發現這個問題：比如說您的pom 同時引用�
 			<version>3.0.5.RELEASE</version>
 		</dependency>
 	<dependencies>
-</pom>
+</project>
 }}}
 雖然都是使用了3.0.5版，可是"package"後，您會發現org.springframework.core 怎麼會同時存在3.0.5與3.0.3的jar檔，這是因為spring-security-cor的dependency引用了3.0.3版的org.springframework.core，所以才會同時存在兩個版本。
 要如何事先發現這個問題呢?
@@ -567,7 +616,7 @@ BUILD SUCCESS
 
 所以我們當然想使用新版本，所以必須讓spring-security-core排除引用 org.springframework.core 3.0.3版，設定如下：
 {{{
-<pom ...>
+<project ...>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -586,7 +635,7 @@ BUILD SUCCESS
 			</exclusions>
 		</dependency>
 	<dependencies>
-</pom>
+</project>
 }}}
 再執行一次"mvn dependency:tree"看看引用的library
 {{{
@@ -620,7 +669,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 例如在Andord開發的時候，用模擬器測試的時候，為加快速度，根本不必考慮[http://developer.android.com/guide/publishing/app-signing.html 簽署]apk的問題，但是發佈App時則一定要簽署才行。
 所以我們設定如下
 {{{
-<pom ...>
+<project ...>
 	<profiles>
 		<profile>
 			<id>sign</id><!--我們自行命名的Profile-->
@@ -655,7 +704,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 			</build>
 		</profile>
 	</profiles>
-</pom>
+</project>
 }}}
 所以最後要建立發佈的App時，只要執行 "mvn install -Psign"就可以為建立的apk檔案加簽了
 
@@ -663,7 +712,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 來為不同的環境設定不同的參數，
 例如我們在專案下開了兩個目錄TomcatEnv與JbossEnv，裡面各放了一個system.properties，然後打打包專案時，才指定要用那一個檔案。
 {{{
-<pom ...>
+<project ...>
 	<profiles>
 		<profile>
 	    <id>jboss</id><!--我們自行命名的Profile-->
@@ -707,7 +756,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 	    </build>
 		</profile>
 	</profiles>
-</pom>
+</project>
 }}}
 所以當我們要打包Jboss環境的war檔時，執行 "mvn package -Pjboss"，要打包到tomcat時執行 "mvn package -Ptomcat"
 
