@@ -1,3 +1,2 @@
-﻿* Maven
-  *  [http://code.google.com/p/javawiki/wiki/StarupMaven?wl=zh-Hant Introduce Maven]
-* Cordova(PhoneGap)
+* [http://code.google.com/p/javawiki/wiki/StarupMaven?wl=zh-Hant Maven]
+* [http://code.google.com/p/javawiki/wiki/Cordova?wl=zh-Hant Cordova(PhoneGap)]
