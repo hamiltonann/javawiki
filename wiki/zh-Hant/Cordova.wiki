@@ -19,5 +19,11 @@ App程式對於持續投注在與客戶直接互動的公司來說是一個新�
   <dt>低階存取</dt>
   <dd>HTML5目前已提供了若干硬體存取的功能，但想要全面應用低階存取，那是不可能的(除非針對各平台寫Plugin程式)，例如存取USB</dd>
   <dt>程式碼放在那裡</dt>
-  <dd>如果程式是靜態的內容，那可以把所有的Web程式直接包入App內，那麼除了降低開發門檻外，那就發揮不了PhoneGap的優勢</dd>
+  <dd>如果程式是靜態的內容，那可以把所有的Web程式直接包入App內，缺點是程式改版時必須重新發佈新版程式，如果是放在企業網站，則要考慮的更多的連線與速度的問題</dd>
 </dl>
+
+== 安裝Android SDK ==
+[http://developer.android.com/sdk/installing.html 這個]是前提吧，就好像我不用提醒要先裝[http://www.oracle.com/technetwork/java/javase/downloads/index.html JDK]吧?
+唯一要注意的是若是您用[StarupMaven Maven]開發，請把所有JDK或是Android所有目錄都裝成短檔名(我是用Win2k)，長檔名不知道是因為有空白的關係還是太長了，
+反正[http://code.google.com/p/maven-android-plugin/ Android Maven Plugin]就是不認同，所以在我的環境變數中，我把 XXX_HOME 全部都設成的短檔名。<br/>
+另外，Proguard 4.6不支援JDK7，請注意一下。
