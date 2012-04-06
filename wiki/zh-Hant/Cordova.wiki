@@ -139,6 +139,7 @@ mvn clean install android:redeply android:run
 mvn android:undeploy
 }}}
 
+其它可用的指令看[http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html 這裡]
 == 建立範例程式說明 ==
 
 === 置換KeyStore ===
