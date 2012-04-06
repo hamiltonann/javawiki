@@ -1,3 +1,5 @@
+<wiki:toc max_depth="3" />
+
   * [StarupMaven Maven]
     * [StarupMaven#%E5%BB%BA%E7%AB%8BMaven%E7%92%B0%E5%A2%83 建立Maven環境]
     * [StarupMaven#%E7%94%A8Maven%E5%BB%BA%E7%AB%8B%E7%AC%AC%E4%B8%80%E5%80%8BProject 用 Maven建立第一個Project]
