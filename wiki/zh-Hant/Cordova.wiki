@@ -101,7 +101,7 @@ Define value for property 'mobilePageEntryUrl': : /m/home
 [INFO] Using property: platform = 8
 Define value for property 'touchUrl': : /m/touch
 Confirm properties configuration:
-groupId: com.blackDog
+groupId: tw.com.blackDog
 artifactId: mobileApp
 version: 1.0-SNAPSHOT
 package: com.blackDog
@@ -126,17 +126,18 @@ mvn android:emulator-start
 {{{
 mvn install android:deploy
 }}}
-看一下模擬器是否已出現"黑狗兄香雞排"的App，如果是用以下指令啟動程式
+看一下模擬器是否已出現"黑狗兄香雞排"的App，如果是則用以下指令啟動程式
 {{{
 mvn android:run
 }}}
-不滿意?那當您修改好程式後用以下指令重新發佈程式並執行
+您對程式不滿意?那當您修改好程式後用以下指令重新發佈程式並執行
 {{{
 mvn clean install android:redeply android:run
 }}}
-或者乾脆移除程式
+或者乾脆移除程式然後再重新建立發佈
 {{{
 mvn android:undeploy
+mvn install android:deploy
 }}}
 
 其它可用的指令看[http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html 這裡]
@@ -160,7 +161,7 @@ android.permission.GET_ACCOUNTS 權限移除
 ||目錄||說明||
 ||drawable-hdpi,drawable-ldpi與drawable-mdpi||icon.png是手機上的圖示圖片，而splash.png是程式開啟的快閃圖片||
 ||assets\www||index.html是第一載入的頁面，內容您也可以重新設計||
-||assets\www||index.html會載入這目錄的圖片，logo.png換成您公司的Logo，loading.gif這張是網頁下載的，也許會有問題||
+||assets\www||index.html會載入這目錄的圖片，logo.png換成您公司的Logo，loading.gif這張是從網路上找來的，也許會有問題||
 
 === 檢視Java Code ===
 請開啟 CordovaActivity.java , 程式碼已有標注說明，這裡要特別說明兩點
