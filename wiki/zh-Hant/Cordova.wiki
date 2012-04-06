@@ -1,6 +1,7 @@
 #summary 使用Cordova(Phonegap)迅速建立Andoird程式
 #labels Featured,Phase-Implementation
 
+<wiki:toc max_depth="3" />
 = 簡介 =
 App程式對於持續投注在與客戶直接互動的公司來說是一個新的課題，可能公司已經投入不少經費或雇用了專門人員關注在Web開發上。
 而App的興起對既有的Web開發人員或公司都會是一個新的挑戰。是投入更多的經費? 或者是雇用新的人(或付出成本讓既有人員Upgrade)?
