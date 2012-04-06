@@ -178,7 +178,7 @@ android.permission.GET_ACCOUNTS 權限移除
 
 === Plugin 說明 ===
 是的，PhoneGap之可以用JavaScript存取硬體系統，主要靠的就是Plugin提供額外的功能，在範例程式中，我已預先使用了一個[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/Android/ChildBrowser ChildBrowser]的Plugin了(程式碼 com.phonegap.plugins.childBrowser.ChildBrowser.java)，
-因為在Android PhoneGap裡是無法用外部瀏覽器開啟網址，而這個Library只有提供Android與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/iPhone/ChildBrowser iPhone]與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/WindowsPhone/ChildBrowser windowPhone]三個版本，也就是說這個程式也許被限縮在這三個OS當中。
+因為在Android PhoneGap裡是無法用外部瀏覽器開啟網址(因為在App內部開啟別人的網頁會喪失對硬體的控制或無法再回到mobile頁面)，而這個Library只有提供Android與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/iPhone/ChildBrowser iPhone]與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/WindowsPhone/ChildBrowser windowPhone]三個版本，也就是說這個程式也許被限縮在這三個OS當中。
 也許我的首頁看起來如下(/m/home)：
 {{{
 <!DOCTYPE html>
@@ -189,7 +189,7 @@ android.permission.GET_ACCOUNTS 權限移除
   <!--使用 ChildBrowser-->
   <script type="text/javascript" charset="utf-8" src="/tintinapp/js/childbrowser.min.js"></script>
   <script type="text/javascript" charset="utf-8">
-    //判斷是否有PhoneGap App還是由一般瀏器所載入
+    //判斷是否由PhoneGap App還是由一般瀏器所載入
     var phoneGapAvailable = false;
     var loadComplete = false;
     function startMobile(onDeviceReady){
