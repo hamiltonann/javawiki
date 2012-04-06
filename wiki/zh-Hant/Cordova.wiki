@@ -31,7 +31,7 @@ SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並�
 <br/>另外提示之前我碰到的經驗：
 <dl>
   <dt>若是ProGuard有問題</dt>
-  <dd><ul><li>有可能是classpath是長檔名的關係 "dir /x" 可幫忙列出短檔名</li><li>ProGuard 4.7以後才支援JDK7，請檢查版本</li></ul></dd>
+  <dd><ul><li>有可能是classpath是長檔名的關係 "dir /x" 可幫忙列出短檔名，請將classpath換成短檔名路徑</li><li>ProGuard 4.7以後才支援JDK7，請檢查版本</li></ul></dd>
   <dt>apk無論是deploy到模擬器或手機都必須簽署金鑰</dt>
   <dd>通常在開發模式下，發佈到模擬器時都好像少了這步驟，通常是因為工具太聰明了，自動使用了"C:\Documents and Settings\`<USER`>\.android\debug.keystore"進行加簽讓我以為不須要這步驟</dd>
 </dl>
