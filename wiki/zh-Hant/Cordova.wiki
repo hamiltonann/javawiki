@@ -173,7 +173,7 @@ android.permission.GET_ACCOUNTS 權限移除
 
 另外Cordova 1.5.0版的Script有個小[https://groups.google.com/forum/#!msg/phonegap/UbrRwq2Q2W8/yQKL3sfp5x4J Bug]，放到WebSite前先修正一下再壓。
 
-其它的JavaScipt一併相同處理
+其它的JavaScipt一併縮減處理，以減少使用資源
 
 === Plugin 說明 ===
 是的，PhoneGap之可以用JavaScript存取硬體系統，主要靠的就是Plugin提供額外的功能，在範例程式中，我已預先使用了一個[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/Android/ChildBrowser ChildBrowser]的Plugin了(程式碼 com.phonegap.plugins.childBrowser.ChildBrowser.java)，
