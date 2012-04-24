@@ -30,17 +30,15 @@ App程式對於持續投注在與客戶直接互動的公司來說是一個新�
 [http://developer.android.com/sdk/installing.html 這個]是前提吧，就好像我不用提醒要先裝[http://www.oracle.com/technetwork/java/javase/downloads/index.html JDK]吧?
 SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並且把 %ANDROID_HOME%\tools 與 %ANDROID_HOME%\platform-tools 加到您電腦的Path
 <br/>因為下面建立的專案會使用到[http://maven.apache.org Maven]，所以請先安裝[http://maven.apache.org Maven]
-<dl>
-  <dt>設定環境變數 M2_HOME到[http://maven.apache.org Maven]的安裝目錄</dt>
-  <dt>將%M2_HOME%\bin 加到path</dt>
-  <dt>開啟%M2_HOME%\conf\settings.xml 在profiles段落下加入以下設定</dt>
-  <dd>{{{<profile>
+  設定環境變數 M2_HOME到[http://maven.apache.org Maven]的安裝目錄<br/>
+  將%M2_HOME%\bin 加到path<br/>
+  開啟%M2_HOME%\conf\settings.xml 在profiles段落下加入以下設定<br/>
+  {{{<profile>
       <id>android</id>
       <properties>
         <android.sdk.path>指到Android的安裝目錄</android.sdk.path>
       </properties>
-  }}}</dd>
-</dl>
+  }}}
 <br/>另外提示之前我碰到的經驗：
 <dl>
   <dt>若是ProGuard有問題</dt>
