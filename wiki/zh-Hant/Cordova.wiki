@@ -57,10 +57,11 @@ SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並�
   * mobilePageEntryUrl: 公司行動網頁的進入點如 "/m/home"，則實際會載入 http://www.blackdog.com.tw/m/home
   * touchUrl: 一個會回傳簡單[http://json.org/ json]字串網址(如 true)，讓PhoneGap可以先行測試網頁有無Ready，若輸入 "/m/touch"，則程式會載入http://www.blackdog.com.tw/m/touch進行測試，測試無誤後才會去行動網址，為什麼要這樣做? 那是因為PhoneGap有一點令人非常討厭的地方就是，當網路存取失敗時，會直接出現一個ApplicationError的視窗，然後程式就直接關掉了，我想您應該不會想讓您的程式一載入就出現這種窘狀吧?
     {{{
-       //不要忘了/m/touch必須回傳兩個Header
-       response.addHeader("Access-Control-Allow-Origin", "*");
-       response.addHeader("Access-Control-Allow-Credentials", "true");
-    }}}  
+    //因為touch要提供跨Domain的Ajax使用，所以不要忘了/m/touch必須回傳兩個Header
+    response.addHeader("Access-Control-Allow-Origin", "*");
+    response.addHeader("Access-Control-Allow-Credentials", "true");
+    }}}
+    相關資料請查詢 Cross-Origin Resource Sharing   
        
 在上一點我說過，apk無論是deploy到模擬器或手機都必須簽署金鑰，您可以用以下方式建立您自已的簽章
 {{{
