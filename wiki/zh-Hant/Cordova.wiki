@@ -63,7 +63,7 @@ SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並�
     }}}
     相關資料請查詢 Cross-Origin Resource Sharing或見[https://sites.google.com/site/gwtmemo/ajax/cross-domainajaxwithcross-originresourcesharing 我的說明]
 
-我已經寫好一個範例，您可以下載作為測試用的Web Application.<br/>
+我已經寫好一個範例，您可以[http://code.google.com/p/javawiki/downloads/detail?name=CordovaWeb.zip 下載]作為測試用的Web Application.<br/>
 同時我也把這個範例放在GAE上面，可直接連接 http://cordova-web.appspot.com/touch 與 http://cordova-web.appspot.com/index 
 進行測試
        
@@ -101,7 +101,7 @@ X:\somewhere>
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=cordova-android-quickstart \
--DarchetypeVersion=1.0-SNAPSHOT
+-DarchetypeVersion=1.7.0
 }}}
 {{{
 X:\somewhere>mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo -Dar...
@@ -118,9 +118,9 @@ Define value for property 'package':  com.blackDog: :
 Define value for property 'CompanyDomain': : cordova-web.appspot.com
 Define value for property 'CompanyName': : 黑狗兄香雞排
 Define value for property 'emulator_name': : avd233
-Define value for property 'mobilePageEntryUrl': : /m/home
+Define value for property 'mobilePageEntryUrl': : /index
 [INFO] Using property: platform = 8
-Define value for property 'touchUrl': : /m/touch
+Define value for property 'touchUrl': : /touch
 Confirm properties configuration:
 groupId: tw.com.blackDog
 artifactId: mobileApp
@@ -129,9 +129,9 @@ package: com.blackDog
 CompanyDomain: www.blackdog.com.tw
 CompanyName: 黑狗兄香雞排
 emulator_name: avd233
-mobilePageEntryUrl: /m/home
+mobilePageEntryUrl: /index
 platform: 8
-touchUrl: /m/touch
+touchUrl: /touch
  Y: :
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
@@ -139,7 +139,7 @@ touchUrl: /m/touch
 X:\somewhere>
 }}}
 您會發現我們已建立好一個基本的PhoneGap App專案，此時您可以把專案Import到Eclipse做後續作業，但是我們不用那麼麻煩，
-首先把您的測試WebSite(http://www.blackdog.com.tw/m/home) 準備好，然後我們使用以下指令啟動模擬器
+首先準備好測試的WebSite(http://cordova-web.appspot.com/index) ，然後我們使用以下指令啟動模擬器
 {{{
 mvn android:emulator-start
 }}}
