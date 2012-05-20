@@ -52,7 +52,7 @@ SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並�
 由於需要測試，首先建立一個模擬器，例如名稱為avd233
 <div><img src="http://javawiki.googlecode.com/svn/images/avdgen.png" title="建立模擬器" alt="建立模擬器"/></div>
 由於我的範例程式必須存取Web，所以假設您會(或將會)建置一個Web Site，並且假定存在幾個資料
-  * CompanyDomain: 公司web的網域，例如www.blackdog.com.tw, 若是您用Tomcat測試，可直接指到內部的WebServer如 127.0.0.1:8080
+  * CompanyDomain: 公司web的網域，例如www.blackdog.com.tw或是cordova-web.appspot.com(測試用), 若是您用Tomcat測試，可直接指到內部的WebServer如 127.0.0.1:8080
   * CompanyName: 公司的名稱，例如"黑狗兄香雞排"，會出現在程式的多處
   * mobilePageEntryUrl: 公司行動網頁的進入點如 "/m/home"，則實際會載入 http://www.blackdog.com.tw/m/home
   * touchUrl: 一個會回傳簡單[http://json.org/ json]字串網址(如 true)，讓PhoneGap可以先行測試網頁有無Ready，若輸入 "/m/touch"，則程式會載入http://www.blackdog.com.tw/m/touch進行測試，測試無誤後才會去行動網址，為什麼要這樣做? 那是因為PhoneGap有一點令人非常討厭的地方就是，當網路存取失敗時，會直接出現一個ApplicationError的視窗，然後程式就直接關掉了，我想您應該不會想讓您的程式一載入就出現這種窘狀吧?
@@ -61,7 +61,11 @@ SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並�
     response.addHeader("Access-Control-Allow-Origin", "*");
     response.addHeader("Access-Control-Allow-Credentials", "true");
     }}}
-    相關資料請查詢 Cross-Origin Resource Sharing   
+    相關資料請查詢 Cross-Origin Resource Sharing或見[https://sites.google.com/site/gwtmemo/ajax/cross-domainajaxwithcross-originresourcesharing 我的說明]
+
+我已經寫好一個範例，您可以下載作為測試用的Web Application.<br/>
+同時我也把這個範例放在GAE上面，可直接連接 http://cordova-web.appspot.com/touch 與 http://cordova-web.appspot.com/index 
+進行測試
        
 在上一點我說過，apk無論是deploy到模擬器或手機都必須簽署金鑰，您可以用以下方式建立您自已的簽章
 {{{
@@ -111,7 +115,7 @@ Define value for property 'groupId': : tw.com.blackDog
 Define value for property 'artifactId': : mobileApp
 Define value for property 'version':  1.0-SNAPSHOT: :
 Define value for property 'package':  com.blackDog: :
-Define value for property 'CompanyDomain': : www.blackdog.com.tw
+Define value for property 'CompanyDomain': : cordova-web.appspot.com
 Define value for property 'CompanyName': : 黑狗兄香雞排
 Define value for property 'emulator_name': : avd233
 Define value for property 'mobilePageEntryUrl': : /m/home
@@ -189,9 +193,9 @@ android.permission.GET_ACCOUNTS 權限移除
  }}}
 
 === JavaScript考量 ===
-行動裝置資源有限，所以載入的檔案越小越好，所以在 \assets\www\ 下的 script,已經藉由[http://closure-compiler.appspot.com/home closure-compiler]縮減過了。
+行動裝置資源有限，所以載入的檔案越小越好，例如 \assets\www\ 下的 script,可藉由[http://closure-compiler.appspot.com/home closure-compiler]進行縮減。
 
-另外Cordova 1.5.0版的Script有個小[https://groups.google.com/forum/#!msg/phonegap/UbrRwq2Q2W8/yQKL3sfp5x4J Bug]，放到WebSite前先修正一下再壓。
+但是很不幸，cordova-1.7.0.js只能採用去除空白(Whitespace only)方式縮減，若採用了其它最佳化，則會導致Phongap無法順利執行。縮減比例不高，所以採用原有的Script.
 
 其它的JavaScipt一併縮減處理，以減少使用資源
 
