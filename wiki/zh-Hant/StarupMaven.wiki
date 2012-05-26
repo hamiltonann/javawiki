@@ -764,8 +764,8 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 == 多模組管理 ==
 因為大部分的人不會用到這個需求，所以省略
 
-== 測試與整合測試(以Spring 與 testNG為例) ==
-  [http://code.google.com/p/javawiki/downloads/detail?name=captive.zip 這是]我事先寫好的一個[http://en.wikipedia.org/wiki/Captive_portal Captive_portal]範例，主要的功能是為了某些商店提供免費的Wifi時，希望客戶只能上我們公司的網頁(也就是任何非本公司的網址都只回應本公司的首頁)，所以這個程式自帶了一個[http://dnspentest.sourceforge.net 造假]的DNS，所以wifi熱點的DNS設定必須指到這個Web程式的執行網址。
+== 測試與整合測試 ==
+  [http://code.google.com/p/javawiki/downloads/detail?name=captive.zip 這是]我事先寫好的一個[http://en.wikipedia.org/wiki/Captive_portal Captive_portal]範例，是以Spring與[http://testng.org testNG]為範例，主要的功能是為了某些商店提供免費的Wifi時，希望客戶只能上我們公司的網頁(也就是任何非本公司的網址都只回應本公司的首頁)，所以這個程式自帶了一個[http://dnspentest.sourceforge.net 造假]的DNS，所以wifi熱點的DNS設定必須指到這個Web程式的執行網址。
 
   這個範例程式除了首頁外，只提供了一個echo的網頁功能，所以我假定單元測試(測試功能性)的標的有兩個
   ||DNS功能測試  || 測試在同時多個人密集解析網址的時候，會不會出錯  ||
