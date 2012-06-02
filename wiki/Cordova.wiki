@@ -78,7 +78,7 @@ touchUrl: /touch
 [INFO] ------------------------------------------------------------------------
 X:\somewhere>
 }}}
-Yes, iordova-web.appspot.com is prebuild web project for testing, you can replace it by yourself,
+Yes, cordova-web.appspot.com is prebuild web project for testing, you can replace it by yourself,
 then we start emulator
 {{{
 mvn android:emulator-start
