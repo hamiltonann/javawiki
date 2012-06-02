@@ -36,7 +36,7 @@ A few questions need to consider before you start.
 == Prepareing ==
   
 == Build your App ==
-Start up to issue command:
+Issue command to build application interactive.
 {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
