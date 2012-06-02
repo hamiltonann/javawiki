@@ -36,14 +36,79 @@ A few questions need to consider before you start.
 == Prepareing ==
   
 == Build your App ==
+Start up to issue command:
+{{{
+mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
+-DarchetypeGroupId=com.google.code \
+-DarchetypeArtifactId=cordova-android-quickstart \
+-DarchetypeVersion=1.7.0
+}}}
+{{{
+X:\somewhere>mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo -Dar...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] ------------------------------------------------------------------------
+[INFO] Generating project in Interactive mode
+[INFO] Archetype defined by properties
+Define value for property 'groupId': : tw.com.blackDog
+Define value for property 'artifactId': : mobileApp
+Define value for property 'version':  1.0-SNAPSHOT: :
+Define value for property 'package':  com.blackDog: :
+Define value for property 'CompanyDomain': : cordova-web.appspot.com
+Define value for property 'CompanyName': : Your Comany's name
+Define value for property 'emulator_name': : avd233
+Define value for property 'mobilePageEntryUrl': : /index
+[INFO] Using property: platform = 8
+Define value for property 'touchUrl': : /touch
+Confirm properties configuration:
+groupId: tw.com.blackDog
+artifactId: mobileApp
+version: 1.0-SNAPSHOT
+package: com.blackDog
+CompanyDomain: cordova-web.appspot.com
+CompanyName: Your Comany's name
+emulator_name: avd233
+mobilePageEntryUrl: /index
+platform: 8
+touchUrl: /touch
+ Y: :
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+X:\somewhere>
+}}}
+Yes, iordova-web.appspot.com is prebuild web project for testing, you can replace it by yourself,
+then we start emulator
+{{{
+mvn android:emulator-start
+}}}
+After emulator started, issue command to build apk and publish to emulator.
+{{{
+mvn install android:deploy
+}}}
+check application avatar appear and issue command to run apk.
+{{{
+mvn android:run
+}}}
+Not satisfied? Well, modify java code and re-publish again.
+{{{
+mvn clean install android:redeply android:run
+}}}
+or you can remove it first before you republish you program.
+{{{
+mvn android:undeploy
+mvn install android:deploy
+}}}
 
+Other goals can see [http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html here].
 == Explaination ==
 
 === Replace KeyStore info ===
 
 === Android Permission ===
 
-=== App's avatar ===
+=== App's images ===
 
 === Go through Java Code ===
 
