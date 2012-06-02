@@ -164,9 +164,9 @@ mvn install android:deploy
 其它可用的指令看[http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html 這裡]
 == 建立範例程式說明 ==
 
-=== 置換KeyStore ===
-首先，若是要置換您自個兒的keystore，請開啟 pom.xml , 將您KeyStore的位置寫入第22行，
-21行雖說用短檔名，那並非強制，只是為了減少問題發生。然後再修改158行與159行相關的密碼資訊
+=== KeyStore ===
+範例程式會自動建立keystore，請開啟 pom.xml，修改第160行的`<dname`>，並填入你自個兒的簽章資訊，
+並置換所有簽章的密碼(changeit)。
 
 === Android的權限問題 ===
 老實說，PhoneGap為了存取硬體，幾乎把能開放的權限都開放了，但是依照我個人的習慣，我不喜歡外部程式取得我的聯絡人資料
