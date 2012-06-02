@@ -1,5 +1,51 @@
-#summary Cordova(Phonegap)
+#summary Build your owned enterprise android app unop Cordova(Phonegap).
 #labels Featured,Phase-Implementation
 
-
 [http://code.google.com/p/javawiki/wiki/Cordova?wl=zh-Hant Chinese Version Only(請看中文版)]
+
+= Introduce =
+It's a new topic for companies continue to invest on customer relationship.
+They pay a lot of resource on web development.
+But is it worth to pay more on mobile apps?Ios or android?
+[http://phonegap.com/ PhoneGap] rescue (Something like [http://www.appcelerator.com/ Titanium Appcelerator] do the same thing).
+They face mobile app as web app extension and try to controll hard ware by JavaScript.
+
+I had wrote a [http://phonegap.com/ PhoneGap project] try to make you cost down.
+
+Adobe had donated [http://phonegap.com/ PhoneGap] to Apache, owing to PhoneGap already a trade mark owned by Adobe.
+So the project change name to [http://incubator.apache.org/cordova/ Cordova], 
+[http://incubator.apache.org/cordova/ Cordova] is under incubation. 
+So its version number change quickly and not yet publish to maven central repository.
+
+== Before start ==
+
+A few questions need to consider before you start.
+<dl>
+  <dt>Running speed</dt>
+  <dd>Web application may slower than native application.</dd>  
+  <dt>Not completed hardware access ability</dt>
+  <dd>HTML5 API already provide few hardware functionality(like File API), but if you want to do something special(ex. USB control), you need to write your plugin upon different platform.</dd>
+  <dt>Where is the source code?</dt>
+  <dd>If your app only contain static content, the best way is to wrap it all into your apk, but it need to re-publish when it changed, Take connectivity and speed into account is need if you decide to put your code on web.</dd>
+</dl>
+
+== Install Android SDK ==
+  No need to remind to install [http://developer.android.com/sdk/installing.html Android SDK] is important just like [http://www.oracle.com/technetwork/java/javase/downloads/index.html JDK] is need to install.
+  ....
+  
+== Prepareing ==
+  
+== Build your App ==
+
+== Explaination ==
+
+=== Replace KeyStore info ===
+
+=== Android Permission ===
+
+=== App's avatar ===
+
+=== Go through Java Code ===
+
+=== JavaScript ===
+  
