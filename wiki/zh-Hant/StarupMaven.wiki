@@ -797,12 +797,12 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
 == 軟體品質保證 ==
   也許專案從開始到發佈，經歷編譯與測試都沒有錯，但是專案源碼，可能是資深與資淺人員一同撰寫而成的，難道他們所撰寫的源碼都保持一致的品質嗎?
-  這也許是個問題，所以我要介紹兩個源碼檢測工具，[http://pmd.sourceforge.net PMD]與 [http://findbugs.sourceforge.net FindBugs].
+  這也許是個問題，所以我要介紹兩個檢測工具，[http://pmd.sourceforge.net PMD]與 [http://findbugs.sourceforge.net FindBugs].
 
 === PMD ===
   [http://pmd.sourceforge.net PMD]是針對源碼進行可能的檢測，我們要在Maven內使用其功能，就必須導入[http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin].
   
-  [http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin]有兩個[http://maven.apache.org/plugins/maven-pmd-plugin/plugin-info.html Goals].
+  [http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin]有數個[http://maven.apache.org/plugins/maven-pmd-plugin/plugin-info.html Goals].
   
   其中只有兩個Goals是我有興趣的，
 ||[http://maven.apache.org/plugins/maven-pmd-plugin/check-mojo.html pmd:check]||檢查源碼內可能違反PMD預設的規則||
