@@ -35,4 +35,5 @@
       * [Cordova#App%E7%9A%84%E5%9C%96%E7%89%87%E7%9B%B8%E9%97%9C%E8%B3%87%E6%96%99 App的圖片相關資料]    
       * [Cordova#%E6%AA%A2%E8%A6%96Java_Code 檢視Java Code]                        
       * [Cordova#%E8%80%83%E9%87%8F JavaScript考量]                                
-      * [Cordova#Plugin_%E8%AA%AA%E6%98%8E Plugin 說明]                                                                             
+      * [Cordova#Plugin_%E8%AA%AA%E6%98%8E Plugin 說明]
+  * [ChangeLog 改版記錄]                                                            
