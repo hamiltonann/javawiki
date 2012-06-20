@@ -1,0 +1,6 @@
+#summary Change Log-改版記錄
+
+  * 2012/6/20 Maven筆記加入 軟體品質保證
+  * 2012/5/26 Maven筆記加入 測試與整合測試
+  * 2012/4/2 建立 Phone (Cordova) 筆記
+  * 2012/4/1 建立Maven 筆記
