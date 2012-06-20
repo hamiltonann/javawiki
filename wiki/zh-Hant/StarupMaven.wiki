@@ -864,13 +864,13 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 <project>
   }}}
   好了，現在除了使用 mvn site產生報表外，還可能使用 mvn pmd:check 進行檢測或是用 mvn pmd:cpd-check檢測重覆的源碼了.<br/>
-  或者以 mvn verify 在最後完成階段再進個兩個Goal的檢測。<br/>
+  或者以 mvn verify 在最後完成階段再進行兩個Goals的檢測。<br/>
   也許有人會問，因為PDM是直接檢查源碼，那個我是否可以在compile時順便檢查(在`<executions`>置入`<phase`>compile`</phase`>)，
   當然可以，不過我之前也說了，PMD檢測出問題點不代表源碼無法通選測試與發佈，若在compile階段檢源碼的品質，有可能會因為不符合
   PMD的檢測而導致後面的步驟(如test,package)做不下去，這也是何要單獨執行goal或是在 verfiy階段才來作檢測的原因
 
 === FindBugs ===
-  [http://findbugs.sourceforge.net FindBugs]檢測的標的不是源碼，而是binary code。<br/>
+  [http://findbugs.sourceforge.net FindBugs]檢測的標的不是源碼，而是binary code.(所以一定要先打包好專案)<br/>
   而且它檢測的項目也與[http://pmd.sourceforge.net PMD]不大相同。也由於此特性，所以不同於其它Plugin，可以一條龍的方式看到最後的報告。<br/>
   它的核心主要是[http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check] goal. 同樣的若是串接maven 指令，到了
   [http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check]檢測出缺點時，一樣會中段後面的執行。<br/>
