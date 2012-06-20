@@ -794,3 +794,133 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   當然也不是不可用[http://tomcat.apache.org/maven-plugin-2.0-SNAPSHOT/run-mojo-features.html Tomcat來作整合測試]，只不過因為我用tomcat7:shutdown無法卸載Tomcat，所以我只好放棄它。
 
   最後，我們使用 "mvn verify" 來查核所有的套件是否符合品質需求。
+
+== 軟體品質保證 ==
+  也許專案從開始到發佈，經歷編譯與測試都沒有錯，但是專案源碼，可能是資深與資淺人員一同撰寫而成的，難道他們所撰寫的源碼都保持一致的品質嗎?
+  這也許是個問題，所以我要介紹兩個源碼檢測工具，[http://pmd.sourceforge.net PMD]與 [http://findbugs.sourceforge.net FindBugs].
+
+=== PMD ===
+  [http://pmd.sourceforge.net PMD]是針對源碼進行可能的檢測，我們要在Maven內使用其功能，就必須導入[http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin].
+  
+  [http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin]有兩個[http://maven.apache.org/plugins/maven-pmd-plugin/plugin-info.html Goals].
+  
+  其中只有兩個Goals是我有興趣的，
+||[http://maven.apache.org/plugins/maven-pmd-plugin/check-mojo.html pmd:check]||檢查源碼內可能違反PMD預設的規則||
+||[http://maven.apache.org/plugins/maven-pmd-plugin/cpd-check-mojo.html pmd:cpd-check]||檢查源碼內重覆的部分||
+
+  如果要在源碼檢測完成後，以報表方式查看檢測結果，我們首先要在pom.xml內放置`<reporting`>段落
+  {{{
+<project>
+  ...
+  <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>2.7.1</version> 
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <sourceEncoding>UTF-8</sourceEncoding><!--源碼所使用的字元編碼-->
+                    <minimumTokens>100</minimumTokens><!--至少多少個token重覆才會被視為源碼重覆-->
+                    <targetJdk>1.6</targetJdk><!--編譯程式所用的JDK版本-->
+                    <verbose>true</verbose><!--檢查過程輸出資訊-->
+                </configuration>
+            </plugin>
+        </plugins>
+  </reporting>
+<project>
+  }}}
+  此時，我們可以用 mvn site產生報表，同時把源碼檢測的報表一併產生。<br/>
+  很不幸地，pmd預設的`<targetJdk`>是1.4，如果您的源碼內含有annotation或是generic，那麼您即使用`<reporting`>把
+  `<targetJdk`>改為1.5以上是沒有用的，PMD仍然會告訴您annotation或是generic不符合JDK 1.4的規範。
+  所以解決的辦法是我們必須把上面那一段，同樣放一分到`<build`>`<plugins`>內，才能解決這個問題。
+  {{{    
+<project>
+  ...    
+  <build>
+    <plugins>        
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>2.7.1</version>  
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>check</goal>
+                        <goal>cpd-check</goal>
+                    </goals>
+                </execution>
+            </executions>   
+            <configuration>
+                <linkXref>true</linkXref>
+                <sourceEncoding>UTF-8</sourceEncoding><!--源碼所使用的字元編碼-->
+                <minimumTokens>100</minimumTokens><!--至少多少個token重覆才會被視為源碼重覆-->
+                <targetJdk>1.6</targetJdk><!--編譯程式所用的JDK版本-->
+                <verbose>true</verbose><!--檢查過程輸出資訊-->
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>     
+<project>
+  }}}
+  好了，現在除了使用 mvn site產生報表外，還可能使用 mvn pmd:check 進行檢測或是用 mvn pmd:cpd-check檢測重覆的源碼了.<br/>
+  或者以 mvn verify 在最後完成階段再進個兩個Goal的檢測。<br/>
+  也許有人會問，因為PDM是直接檢查源碼，那個我是否可以在compile時順便檢查(在`<executions`>置入`<phase`>compile`</phase`>)，
+  當然可以，不過我之前也說了，PMD檢測出問題點不代表源碼無法通選測試與發佈，若在compile階段檢源碼的品質，有可能會因為不符合
+  PMD的檢測而導致後面的步驟(如test,package)做不下去，這也是何要單獨執行goal或是在 verfiy階段才來作檢測的原因
+
+=== FindBugs ===
+  [http://findbugs.sourceforge.net FindBugs]檢測的標的不是源碼，而是binary code。<br/>
+  而且它檢測的項目也與[http://pmd.sourceforge.net PMD]不大相同。也由於此特性，所以不同於其它Plugin，可以一條龍的方式看到最後的報告。<br/>
+  它的核心主要是[http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check] goal. 同樣的若是串接maven 指令，到了
+  [http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check]檢測出缺點時，一樣會中段後面的執行。<br/>
+  首先我們先加入該[http://mojo.codehaus.org/dashboard-maven-plugin/ plugin].
+  {{{        
+<project>
+  ...    
+  <build>
+        <plugins>         
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5</version>  
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>   
+                <configuration>
+                    <effort>Max</effort><!--檢測的程度，值可為Min、Default或是Max-->
+                    <xmlOutput>true</xmlOutput>
+                </configuration>
+            </plugin>
+        </plugins>
+  </build>     
+<project>
+  }}}
+  現在我們可以用指令 mvn verify 或是 mvn package findbugs:check產生檢測的xml結果輸出。<br/>
+  是的，當檢測出缺點時，我們可以用指令 mvn findbugs:gui 以視覺化方式查看 xml 的輸出。
+  <div><img src="http://javawiki.googlecode.com/svn/images/findbugsgui.png" alt="FindBugs視覺畫面"/></div>  
+  或者我們在`<reporting`>段落內加入
+  {{{      
+<project>
+  ...
+  <reporting>
+        <plugins>
+            <plugin><!--整合FindBugs報表-->
+               <groupId>org.codehaus.mojo</groupId>
+               <artifactId>dashboard-maven-plugin</artifactId>
+               <version>1.0.0-beta-1</version>
+            </plugin>
+            <plugin><!--FindBugs產生報表-->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5</version>
+            </plugin>
+        </plugins>
+  </reporting>
+<project>
+  }}}
+  然後以 mvn site 產生整體報表時，並將FindBus的xml檔案轉成Html報表。
