@@ -874,7 +874,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   而且它檢測的項目也與[http://pmd.sourceforge.net PMD]不大相同。也由於此特性，所以不同於其它Plugin，可以一條龍的方式看到最後的報告。<br/>
   它的核心主要是[http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check] goal. 同樣的若是串接maven 指令，到了
   [http://mojo.codehaus.org/findbugs-maven-plugin/check-mojo.html check]檢測出缺點時，一樣會中段後面的執行。<br/>
-  首先我們先加入該[http://mojo.codehaus.org/dashboard-maven-plugin/ plugin].
+  首先我們先加入該[http://mojo.codehaus.org/findbugs-maven-plugin/ plugin].
   {{{        
 <project>
   ...    
