@@ -949,3 +949,5 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 ||config/maven_checks.xml||Maven定義開發風格||
 ||config/turbine_checks.xml||Turbine定義開發風格||
 ||config/avalon_checks.xml||Avalon定義開發風格||
+
+  設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
