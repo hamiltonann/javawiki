@@ -925,6 +925,12 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   }}}
   然後以 mvn site 產生整體報表時，並將FindBus的xml檔案轉成Html報表。
 
+<div><b>註:</b>目前findbus 2.0.0 版本有Bug,每次執行時均會出現 "ParseException: Unparseable date:...." 錯誤,
+解決的方式就是，打開 檔案庫目錄下的 com/google/code/findbugs/findbugs/2.0.0/findbugs-2.0.0.jar，
+移除 /edu/umd/cs/findbugs/version.properties檔案就可以了，<br/>
+(不要試著修改其內容的 plugin.release.date 的 12/20/2011 09:17 PM EST 改成 12/20/2011 09:17 \u4e0b\u5348 EST，
+因為作者有在兩個地方去parse這個內容，一處用en Locale，一處用您的本地Locale，最好的方式就是移除它)
+</div>
 === Checkstyle ===
   [http://checkstyle.sourceforge.net/ Checkstyle]是用來檢查源碼的是否符合一定的風格，在pom.xml內加入以下Plugin
 {{{ 
