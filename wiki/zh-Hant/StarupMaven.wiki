@@ -1,6 +1,7 @@
 #summary 開始使用Maven
 #labels Featured,Phase-Implementation
 <g:plusone size="medium"></g:plusone>
+
 開始使用Maven是因為受夠了每次開始一個Project，都要重新開始撰寫
 Ant build.xml，雖然有過去建立的範本，但是還是的根據不同狀況加以
 改寫(比如不同的打包方式，如同時deploy 到tomcat 與jboss時用到不
