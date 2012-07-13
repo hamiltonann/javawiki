@@ -1,0 +1,5 @@
+#summary 開始使用Maven
+#labels Featured,Phase-Implementation
+
+
+[http://code.google.com/p/javawiki/wiki/StarupMaven?wl=zh-Hant Chinese Version Only(請看中文版)]
