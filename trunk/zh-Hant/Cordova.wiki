@@ -1,0 +1,259 @@
+#summary 使用Cordova(Phonegap)迅速建立Andoird程式
+#labels Featured,Phase-Implementation
+
+= 簡介 =
+App程式對於持續投注在與客戶直接互動的公司來說是一個新的課題，可能公司已經投入不少經費或雇用了專門人員關注在Web開發上。
+而App的興起對既有的Web開發人員或公司都會是一個新的挑戰。是投入更多的經費? 或者是雇用新的人(或付出成本讓既有人員Upgrade)?
+不幸的是，光是App開發至少又有兩大陣營 - Apple 與 Andoird，
+為了最小化開發成本，於是有人提出了讓Web程式直接變成App，於是乎有了[http://phonegap.com/ PhoneGap]與[http://www.appcelerator.com/ Titanium Appcelerator]的出現。
+
+是的，其中的概念就是用Web當作App的介面，並且允許使用JavaScript來存取一些硬體。
+
+因為我已經用[http://phonegap.com/ PhoneGap]開發了一個專案，所以我要就它來說明開發的相關經驗，讓企業用戶能更快導入並降低成本。
+
+[http://phonegap.com/ PhoneGap]目前已經由Adobe捐給Apache，因為PhoneGap已經是註冊商標，所以改名為[http://incubator.apache.org/cordova/ Cordova]，
+但由於Cordova尚在孵育階段，所以有些資料或下載仍須不時到兩個網站看看。
+
+== 開始之前 ==
+在使用這種模式開發App之前，您必須先思考幾個問題
+<dl>
+  <dt>執行速度</dt>
+  <dd>用App來執行Web程式，勢必不如原生(Native)的速度</dd>  
+  <dt>低階存取</dt>
+  <dd>HTML5目前已提供了若干硬體存取的功能，但想要全面應用低階存取，那是不可能的(除非針對各平台寫Plugin程式)，例如存取USB</dd>
+  <dt>程式碼放在那裡</dt>
+  <dd>如果程式是靜態的內容，那可以把所有的Web程式直接包入App內，缺點是程式改版時必須重新發佈新版程式，如果是放在企業網站，則要考慮的更多的連線與速度的問題</dd>
+</dl>
+
+== 安裝Android SDK ==
+[http://developer.android.com/sdk/installing.html 這個]是前提吧，就好像我不用提醒要先裝[http://www.oracle.com/technetwork/java/javase/downloads/index.html JDK]吧?
+SDK裝好後，請設定環境變數ANDROID_HOME 指到SDK的安裝目錄，並且把 %ANDROID_HOME%\tools 與 %ANDROID_HOME%\platform-tools 加到您電腦的Path
+<br/>因為下面建立的專案會使用到[http://maven.apache.org Maven]，所以請先安裝[http://maven.apache.org Maven]
+  設定環境變數 M2_HOME到[http://maven.apache.org Maven]的安裝目錄<br/>
+  將%M2_HOME%\bin 加到path<br/>
+  開啟%M2_HOME%\conf\settings.xml 在profiles段落下加入以下設定<br/>
+  {{{
+      <profile>
+          <id>android</id>
+          <properties>
+                <android.sdk.path>指到Android的安裝目錄</android.sdk.path>
+          </properties>
+      </profile>
+  }}}
+<br/>另外提示之前我碰到的經驗：
+<dl>
+  <dt>若是ProGuard有問題</dt>
+  <dd><ul><li>有可能是classpath是長檔名的關係 "dir /x" 可幫忙列出短檔名，請將classpath換成短檔名路徑</li><li>ProGuard 4.7以後才支援JDK7，請檢查版本</li></ul></dd>
+  <dt>apk無論是deploy到模擬器或手機都必須簽署金鑰</dt>
+  <dd>通常在開發模式下，發佈到模擬器時都好像少了這步驟，通常是因為工具太聰明了，自動使用了"C:\Documents and Settings\`<USER`>\.android\debug.keystore"進行加簽讓我以為不須要這步驟</dd>
+</dl>
+
+== 事前作業 ==
+由於需要測試，首先建立一個模擬器，例如名稱為avd233
+<div><img src="http://javawiki.googlecode.com/svn/images/avdgen.png" title="建立模擬器" alt="建立模擬器"/></div>
+由於我的範例程式必須存取Web，所以假設您會(或將會)建置一個Web Site，並且假定存在幾個資料
+  * CompanyDomain: 公司web的網域，例如www.blackdog.com.tw或是cordova-web.appspot.com(測試用), 若是您用Tomcat測試，可直接指到內部的WebServer如 127.0.0.1:8080
+  * CompanyName: 公司的名稱，例如"黑狗兄香雞排"，會出現在程式的多處
+  * mobilePageEntryUrl: 公司行動網頁的進入點如 "/m/home"，則實際會載入 http://www.blackdog.com.tw/m/home
+  * touchUrl: 一個會回傳簡單[http://json.org/ json]字串網址(如 true)，讓PhoneGap可以先行測試網頁有無Ready，若輸入 "/m/touch"，則程式會載入http://www.blackdog.com.tw/m/touch進行測試，測試無誤後才會去行動網址，為什麼要這樣做? 那是因為PhoneGap有一點令人非常討厭的地方就是，當網路存取失敗時，會直接出現一個ApplicationError的視窗，然後程式就直接關掉了，我想您應該不會想讓您的程式一載入就出現這種窘狀吧?
+    {{{
+    //因為touch要提供跨Domain的Ajax使用，所以不要忘了/m/touch必須回傳兩個Header
+    response.addHeader("Access-Control-Allow-Origin", "*");
+    response.addHeader("Access-Control-Allow-Credentials", "true");
+    }}}
+    相關資料請查詢 Cross-Origin Resource Sharing或見[https://sites.google.com/site/gwtmemo/ajax/cross-domainajaxwithcross-originresourcesharing 我的說明]
+
+我已經寫好一個範例，您可以[http://code.google.com/p/javawiki/downloads/detail?name=CordovaWeb.zip 下載]作為測試用的Web Application.<br/>
+同時我也把這個範例放在GAE上面，可直接連接 http://cordova-web.appspot.com/touch 與 http://cordova-web.appspot.com/index 
+進行測試
+       
+在上一點我說過，apk無論是deploy到模擬器或手機都必須簽署金鑰，您可以用以下方式建立您自已的簽章
+{{{
+X:\somewhere>keytool -genkey -alias cordovandroid -keyalg RSA  -validity 70000 -keystore X:\keystoreDirectory\sign.jks
+輸入金鑰儲存庫密碼:
+重新輸入新密碼:
+它們不相符。請重試
+輸入金鑰儲存庫密碼:
+重新輸入新密碼:
+您的名字與姓氏為何？
+  [Unknown]:  Kent Yeh
+您的組織單位名稱為何？
+  [Unknown]:  IT
+您的組織名稱為何？
+  [Unknown]:  BlackDog
+您所在的城市或地區名稱為何？
+  [Unknown]:  Kaohsiung
+您所在的州及省份名稱為何？
+  [Unknown]:  Taiwan
+此單位的兩個字母國別代碼為何？
+  [Unknown]:  TW
+CN=Kent Yeh, OU=IT, O=BlackDog, L=Kaohsiung, ST=Taiwan, C=TW 正確嗎？
+  [否]:  Y
+
+輸入 <cordovandroid> 的金鑰密碼
+        (RETURN 如果和金鑰儲存庫密碼相同):
+X:\somewhere>
+}}}   
+
+== 建立範例程式 ==
+我會假設您已安裝並可以使用[StarupMaven Maven]，請用以下互動指令建立您的PhoneGap專案
+{{{
+mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
+-DarchetypeGroupId=com.google.code \
+-DarchetypeArtifactId=cordova-android-quickstart \
+-DarchetypeVersion=1.7.0
+}}}
+{{{
+X:\somewhere>mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo -Dar...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Maven Stub Project (No POM) 1
+[INFO] ------------------------------------------------------------------------
+[INFO] Generating project in Interactive mode
+[INFO] Archetype defined by properties
+Define value for property 'groupId': : tw.com.blackDog
+Define value for property 'artifactId': : mobileApp
+Define value for property 'version':  1.0-SNAPSHOT: :
+Define value for property 'package':  com.blackDog: :
+Define value for property 'CompanyDomain': : cordova-web.appspot.com
+Define value for property 'CompanyName': : 黑狗兄香雞排
+Define value for property 'emulator_name': : avd233
+Define value for property 'mobilePageEntryUrl': : /index
+[INFO] Using property: platform = 8
+Define value for property 'touchUrl': : /touch
+Confirm properties configuration:
+groupId: tw.com.blackDog
+artifactId: mobileApp
+version: 1.0-SNAPSHOT
+package: com.blackDog
+CompanyDomain: www.blackdog.com.tw
+CompanyName: 黑狗兄香雞排
+emulator_name: avd233
+mobilePageEntryUrl: /index
+platform: 8
+touchUrl: /touch
+ Y: :
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+X:\somewhere>
+}}}
+您會發現我們已建立好一個基本的PhoneGap App專案，此時您可以把專案Import到Eclipse做後續作業，但是我們不用那麼麻煩，
+首先準備好測試的WebSite(http://cordova-web.appspot.com/index) ，然後我們使用以下指令啟動模擬器
+{{{
+mvn android:emulator-start
+}}}
+當模擬器載入完成後我們用以下指令Build專案並發佈程式到模擬器
+{{{
+mvn install android:deploy
+}}}
+看一下模擬器是否已出現"黑狗兄香雞排"的App，如果是則用以下指令啟動程式
+{{{
+mvn android:run
+}}}
+您對程式不滿意?那當您修改好程式後用以下指令重新發佈程式並執行
+{{{
+mvn clean install android:redeply android:run
+}}}
+或者乾脆移除程式然後再重新建立發佈
+{{{
+mvn android:undeploy
+mvn install android:deploy
+}}}
+
+其它可用的指令看[http://maven-android-plugin-m2site.googlecode.com/svn/plugin-info.html 這裡]
+== 建立範例程式說明 ==
+
+=== KeyStore ===
+範例程式會自動建立keystore，請開啟 pom.xml，修改第160行的`<dname`>，並填入你自個兒的簽章資訊，
+並置換所有簽章的密碼(changeit)。
+
+=== Android的權限問題 ===
+老實說，PhoneGap為了存取硬體，幾乎把能開放的權限都開放了，但是依照我個人的習慣，我不喜歡外部程式取得我的聯絡人資料
+所以我把聯絡人資料的權限移除了，當然如果您不想要存取機主的帳號資料也可以把AndroidManifest.xml內的
+android.permission.GET_ACCOUNTS 權限移除
+
+另外,PhoneGap可以限制App對外可以存取那些網站，您可以打開 res/xml/cordova.xml 看看，
+因為我經常要存取JQuery、JQueryMobile與Google之類的服務，尤其是Google會衍生存取一大堆的網址，
+所以我乾脆全部開放，您可以視需要重新設定
+
+=== App的圖片相關資料 ===
+您有必要將程式內的相關圖片與文字內容置換，否則若是觸犯的著作權那將是由您的公司承擔相關的責任，相關圖片說明如下
+||目錄||說明||
+||drawable-hdpi,drawable-ldpi與drawable-mdpi||icon.png是手機上的圖示圖片，而splash.png是程式開啟的快閃圖片||
+||assets\www||index.html是第一載入的頁面，內容您也可以重新設計||
+||assets\www||index.html會載入這目錄的圖片，logo.png換成您公司的Logo，loading.gif這張是從網路上找來的，也許會有問題||
+
+=== 檢視Java Code ===
+請開啟 CordovaActivity.java , 程式碼已有標注說明，這裡要特別說明兩點
+ # loadUrlTimeoutValue值如果不設定，則預設是20秒，我想網頁載入等待時間依各人網路不同，乾脆加長到60秒，以免網路太慢出現Application Error
+ # WebSettings的設定，由於PhoneGap預設不給縮放頁面，而像我使用jquerymobile，就不想要用戶縮放頁面，而當載入有圖片頁面時，又要能讓使用者自行縮放,所以這樣設定是把控制權交給頁面，HTML可以用viewport來設定以下開放用戶縮放(user-scalable=yes)，倍數最小由1倍到10倍
+ {{{
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=10,user-scalable=yes"/>
+ }}}
+
+=== JavaScript考量 ===
+行動裝置資源有限，所以載入的檔案越小越好，例如 \assets\www\ 下的 script,可藉由[http://closure-compiler.appspot.com/home closure-compiler]進行縮減。
+
+但是很不幸，cordova-1.7.0.js只能採用去除空白(Whitespace only)方式縮減，若採用了其它最佳化，則會導致Phongap無法順利執行。縮減比例不高，所以採用原有的Script.
+
+其它的JavaScipt一併縮減處理，以減少使用資源
+
+=== Plugin 說明 ===
+是的，PhoneGap之可以用JavaScript存取硬體系統，主要靠的就是Plugin提供額外的功能，在範例程式中，我已預先使用了一個[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/Android/ChildBrowser ChildBrowser]的Plugin了(程式碼 com.phonegap.plugins.childBrowser.ChildBrowser.java)，
+因為在Android PhoneGap裡是無法用外部瀏覽器開啟網址(因為在App內部開啟別人的網頁會喪失對硬體的控制或無法再回到mobile頁面)，而這個Library只有提供Android與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/iPhone/ChildBrowser iPhone]與[https://github.com/purplecabbage/phonegap-plugins/tree/43d2f2ed01950097c8436caaf9d3c5377ce48626/WindowsPhone/ChildBrowser windowPhone]三個版本，也就是說這個程式也許被限縮在這三個OS當中。
+也許我的首頁看起來如下(/m/home)：
+{{{
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1.0,user-scalable=no"/>
+  <!--使用修正後的cordova script-->
+  <script type="text/javascript" charset="utf-8" src="/server/js/cordova-1.5.0.fix.min.js"></script>
+  <!--使用 ChildBrowser-->
+  <script type="text/javascript" charset="utf-8" src="/tintinapp/js/childbrowser.min.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    //判斷是否由PhoneGap App還是由一般瀏器所載入
+    var phoneGapAvailable = false;
+    var loadComplete = false;
+    function startMobile(onDeviceReady){
+      document.addEventListener("deviceready", function(){
+        phoneGapAvailable=true;
+        if(device.platform=="Android"||device.platform=="BlackBerry")
+          document.addEventListener("backbutton", function(){
+            navigator.notification.confirm("確定要離開程式?", function(button){
+              if(2==button) navigator.app.exitApp();
+              else if(3==button)navigator.app.backHistory();
+            }, "黑狗兄香雞排", "否,是,回上頁");
+          }, false);
+          if(onDeviceReady)
+            onDeviceReady();
+      }, false);
+      if(onDeviceReady)
+        setTimeout("if(!phoneGapAvailable&&onDeviceReady)onDeviceReady()",1000);
+    }
+    function onDeviceReady(){
+      loadComplete = true;
+    }
+    window.onload=function(){
+      startMobile(onDeviceReady);
+    }
+    function openExternal(url){
+      if(loadComplete){
+        if(phoneGapAvailable){
+           //App使用Plugin載入外部瀏覽器開啟外部URL
+           window.plugins.childBrowser.openExternal(url,false);
+        }else{
+          window.open(url,"_blank");
+        }
+      }else{
+         //想辦法顯示給用戶知道
+         alert("載入未完成，請稍後…")
+      }
+    }
+  </script>
+  <body>
+      <div><a href="javascript:openExternal('www.blackdog.com.com')">開啟官網</a></div>
+      ...
+  </body>
+</html>
+}}}
