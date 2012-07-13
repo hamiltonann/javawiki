@@ -1,6 +1,5 @@
 #summary 開始使用Maven
 #labels Featured,Phase-Implementation
-<g:plusone size="medium"></g:plusone>
 
 開始使用Maven是因為受夠了每次開始一個Project，都要重新開始撰寫
 Ant build.xml，雖然有過去建立的範本，但是還是的根據不同狀況加以
@@ -258,6 +257,9 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 ||mvn javadoc:javadoc ||產生java api檔案 ||
 ||mvn javadoc:jar ||產生java api打包檔案||
 ||mvn exec:exec ||執行Project(需進行一些[設定])||
+||mvn versions:display-dependency-updates ||檢查相依函式庫的版本更新狀況||
+||mvn versions:display-plugin-updates ||檢查Plugin的更新狀況||
+
 
 
 == 常用的plugin build設定 ==
