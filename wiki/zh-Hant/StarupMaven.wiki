@@ -176,7 +176,7 @@ plugin的定義結構通常如下
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId><!--若是此值，則可省略-->
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.5.1</version>
 				<configuration>
 				...各種設定
 				</configuration>
@@ -272,7 +272,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>2.5.1</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
@@ -297,7 +297,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12</version>
+				<version>2.12.4</version>
 				<configuration>
 					<suiteXmlFiles>
 						<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
@@ -458,7 +458,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.6</version>
+				<version>2.0</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -497,7 +497,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-surefire-plugin</artifactId><!--因為是測試時發生，所以設定這個Plugin-->
-			  <version>2.11</version>
+			  <version>2.12.4</version>
 			  <configuration>
 			    <systemProperties>
 			      <property>
@@ -540,7 +540,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
-        <version>1.6</version>
+        <version>1.8</version>
         <!-- Checkout之後要執行的Goal -->
         <configuration>
           <goals>package</goals><!--給scm:bootstrap goal使用，checkout後立即執行 package goal-->
@@ -886,7 +886,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5</version>  
+                <version>2.5.2</version>  
                 <executions>
                     <execution>
                         <goals>
@@ -920,7 +920,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
             <plugin><!--FindBugs產生報表-->
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>findbugs-maven-plugin</artifactId>
-                <version>2.5</version>
+                <version>2.5.2</version>
             </plugin>
         </plugins>
   </reporting>
