@@ -258,6 +258,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 ||mvn javadoc:jar ||產生java api打包檔案||
 ||mvn exec:exec ||執行Project(需進行一些[設定])||
 ||mvn versions:display-dependency-updates ||檢查相依函式庫的版本更新狀況||
+||mvn versions:use-latest-releases ||直接將pom.xml內的版本更新到最近一版釋出(會備分舊版的pom.xml)||
 ||mvn versions:display-plugin-updates ||檢查Plugin的更新狀況||
 
 
