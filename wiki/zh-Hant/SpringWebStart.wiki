@@ -1,0 +1,39 @@
+#summary 快速使用Spring開發.
+#labels Featured,Phase-Implementation
+
+說實在的，Spring框架是非常強大的工具，但是從入門到精通，實在是要花不少時
+間，長久寫下來，由其在Web開發上，其實就是那一套加加減減，每個專案都要先
+花一段時間，先把基本架構Copy & Paste出來。<br/>
+所以我才想說乾脆大雜燴一番，把整隻章魚端出來，然後再把不要的手腳砍掉，
+把多餘的時間專注在專案本身。
+
+= 建立專案 =
+最快的方法當然是從命令列開始：
+{{{
+mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
+-DarchetypeGroupId=com.google.code \
+-DarchetypeArtifactId=SpringWebStart \
+-DarchetypeVersion=0.1
+}}}
+然後回達一些問題
+{{{
+Define value for property 'groupId': : <輸入群組識別,如：com.spring>
+Define value for property 'artifactId': : <輸入專案名稱,如：TestSpringWeb>
+Define value for property 'version':  1.0-SNAPSHOT: : <輸入專案的版本，預設為 1.0-SNAPSHOT>
+Define value for property 'package':  com.spring: : <輸入套件名稱，預設為群組識別>
+Define value for property 'DomainName': : <輸入產生網頁SSL憑證的CN,如：localhost>
+Confirm properties configuration:
+Ｙ: :
+}}}
+然後建立專案
+
+= 專案組成內容 =
+　專案的內容包括 Spring Web(RestFul),Spring Mobile, Spring Security
+(資料庫驗證或是使用OpenId驗證),多國語言,JPA(Hibernate),單元測試，整合測試，
+程式碼樣式檢查與程式品質檢驗。<br/>
+  一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
+其它的部分，我則認為應該保留。
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
