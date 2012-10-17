@@ -1,4 +1,4 @@
-#summary 開始使用Maven
+#summary 快速使用Spring開發.
 #labels Featured,Phase-Implementation
 
 
