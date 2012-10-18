@@ -54,36 +54,39 @@ mvn site
   # 您所撰寫的JPA程式請放到 com.spring.modle 套件下，hibernate將自動掃瞄該目錄讀取JPA程式的ORM設定
   # <b>applicationContext-security.xml</b>內有一個<b>port-mappings</b>設定, 開發測試時分別將http與ssl對應到8080與8443, 真正上線時，必須視實際環境修改。另外有指定Port的檔案分別是<b>pom.xml</b>與<b>testng-integration.xml</b>
   # 在 test/java下撰寫您的單視測試程式與整合測試程式(Class須以Test開頭)，並將之加到<b>testng-unit.xml</b>與<b>testng-integration.xml</b>內(本來是可以自動掃瞄的，但是大型專案的測試有時會跑到睡著，所以設定檔讓我們彈性指定要測試的程式)
+
 = SD4J說明 =
 如果您看了DefaultController.java的源碼，您會發現我使用了[http://code.google.com/p/sd4j/ sd4j]，
 那是我寫的另外一個專案，該專案的概念只有兩個，其中Manager主導商業方法並控制交易，也就是裡面一些明顯看起來是資料異動的函式，已經是Transationable，
-而Dao則是真正主導資料存取，在程式中使用@DaoManager與＠Dao會自動進行注入。
+而Dao則是真正主導資料存取，在程式中使用@DaoManager與＠Dao會自動進行注入([http://code.google.com/p/sd4j/ sd4j]要求環境中要存在一個
+[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/orm/jpa/JpaTransactionManager.html JpaTransactionManager]物件)。
 使用方式如下：
 {{{
     @DaoManager //自動注入
     private RepositoryManager<Member> memberManager;
 }}}
-若是您的自已要執行的商業方法，或是要有必要跨物件存取則自行繼承範例如下：
+若是您的自已要執行的商業方法，或是要有必要跨資料物件存取則自行繼承範例如下：
 {{{
-public class StuffManager extends AnnotatedRepositoryManager<Stuff> {
+public class DetailManager extends AnnotatedRepositoryManager<Detail> {
   @Dao //自動注入
-  private DaoRepository<Another> anotherDao;
+  private DaoRepository<Master> masterDao;
   
-  public List<Stuff> findByMyself(...){
-    String sa = this.getAliasName();
-    String aa = anotherDao.getAliasName();
-    StringBuilder ql = new StringBuilder("SELECT DISTINCT ").append(aa).append(" FROM ").
-      append(aa.getEntityName()).append(" ").append(aa).append(" JOIN ").append(aa).append(".collectionField ").
-      append(sa).append(" WHERE ").append(aa).append(".field=?1 ....");
+  public List<Deail> findByMyself(...){
+    String da = this.getAliasName();
+    String ma = masterDao.getAliasName();
+    StringBuilder ql = new StringBuilder("SELECT DISTINCT ").append(da).append(" FROM ").
+      append(ma.getEntityName()).append(" ").append(ma).append(" JOIN ").append(ma).append(".collectionDetail ").
+      append(da).append(" WHERE ").append(ma).append(".field=?1 ....");
     return getDao().findListByQL(getDao().getClazz(), ql.toString(), 參數);
   }
   
   @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
   public int myCustomUpdate(....){
      int res = 0;
-     for(Stuff stuff:findByCriteria("WHERE ....")){
-       if(stuff.xxx()){
-          aa.delete(stuff.getAnother());
+     for(Detail detail:findByCriteria("WHERE ....")){
+       if(detail.xxx()){
+          detail.getMaster.setXXX(...);
+          masterDao.update(detail.getMaster());
           ...
           res ++;
        }
@@ -93,7 +96,10 @@ public class StuffManager extends AnnotatedRepositoryManager<Stuff> {
 }
 }}}
 如果您要採用自已的資料庫存取機制，則請移除pom.xml內的repositories段落與sd4j的dependency。<br/>
-但是移除的同時，您也會發現失去一些便利，DefaultController
+但是移除的同時，您也會發現失去一些便利，[http://code.google.com/p/sd4j/ sd4j]有DaoPropertyEditor與IntDaoPropertyEditor
+幫忙把Table 為整數或字串primary key轉成ORM物件，DefaultController.userinfo()就是直接把Key值變成Member物件，而不是傳
+回Key值後再去Lookup物件。
+
 = 以IDE建立專案 =
 == NetBeans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
