@@ -6,7 +6,7 @@
 花一段時間，先把基本架構Copy & Paste出來。<br/>
 所以我才想說乾脆大雜燴一番，把整隻章魚端出來，然後再把不要的手腳砍掉，
 把多餘的時間專注在專案本身。<br/>
-專案的內容包括 Spring Web(RestFul),Spring Mobile, Spring Security
+專案的內容包括 Spring Web(RESTful),Spring Mobile, Spring Security
 (資料庫驗證或是使用OpenId驗證),多國語言,JPA(Hibernate),單元測試，整合測試，
 程式碼樣式檢查與程式品質檢驗。<br/>
   一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
@@ -30,7 +30,7 @@ Define value for property 'DomainName': : <輸入產生網頁SSL憑證的CN,如�
 Confirm properties configuration:
 Ｙ: :
 }}}
-然後建立專案(使用IDE的朋友可以參考最後的段落，使用[NetBeans]或是[Eclipse]來建立專案）
+然後建立專案(使用IDE的朋友可以參考最後的段落，使用[NetBean]或是[Eclipse]來建立專案）
 <br/>然後到Maven的安裝目錄，看一下mvn(或mvn.bat)內*MAVEN_OPTS的設定，考慮加大記憶體的使用如
 {{{
 MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
@@ -57,7 +57,7 @@ mvn site
 
 = 以IDE建立專案 =
 
-== NetBeans ==
+== NetBean ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
