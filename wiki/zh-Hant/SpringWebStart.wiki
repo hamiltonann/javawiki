@@ -55,7 +55,7 @@ mvn site
   # <b>applicationContext-security.xml</b>內有一個<b>port-mappings</b>設定, 開發測試時分別將http與ssl對應到8080與8443, 真正上線時，必須視實際環境修改。另外有指定Port的檔案分別是<b>pom.xml</b>與<b>testng-integration.xml</b>
   # 在 test/java下撰寫您的單視測試程式與整合測試程式(Class須以Test開頭)，並將之加到<b>testng-unit.xml</b>與<b>testng-integration.xml</b>內(本來是可以自動掃瞄的，但是大型專案的測試有時會跑到睡著，所以設定檔讓我們彈性指定要測試的程式)
 = SD4J說明 =
-如果您看了DefaultController.java的源碼，您會發現我使用了[sd4j http://code.google.com/p/sd4j/]，
+如果您看了DefaultController.java的源碼，您會發現我使用了[http://code.google.com/p/sd4j/ sd4j]，
 那是我寫的另外一個專案，該專案的概念只有兩個，其中Manager主導商業方法並控制交易，也就是裡面一些明顯看起來是資料異動的函式，已經是Transationable，
 而Dao則是真正主導資料存取，在程式中使用@DaoManager與＠Dao會自動進行注入。
 使用方式如下：
@@ -73,7 +73,7 @@ public class StuffManager extends AnnotatedRepositoryManager<Stuff> {
     String sa = this.getAliasName();
     String aa = anotherDao.getAliasName();
     StringBuilder ql = new StringBuilder("SELECT DISTINCT ").append(aa).append(" FROM ").
-      append(aa.getEntityName()).append(" ").append(aa).append(" JOIN ").append(sa).append(".collectionField ").
+      append(aa.getEntityName()).append(" ").append(aa).append(" JOIN ").append(aa).append(".collectionField ").
       append(sa).append(" WHERE ").append(aa).append(".field=?1 ....");
     return getDao().findListByQL(getDao().getClazz(), ql.toString(), 參數);
   }
