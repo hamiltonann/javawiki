@@ -92,6 +92,8 @@ public class StuffManager extends AnnotatedRepositoryManager<Stuff> {
   }
 }
 }}}
+如果您要採用自已的資料庫存取機制，則請移除pom.xml內的repositories段落與sd4j的dependency。<br/>
+但是移除的同時，您也會發現失去一些便利，DefaultController
 = 以IDE建立專案 =
 == NetBeans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
