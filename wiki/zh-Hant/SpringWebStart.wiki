@@ -5,7 +5,12 @@
 間，長久寫下來，由其在Web開發上，其實就是那一套加加減減，每個專案都要先
 花一段時間，先把基本架構Copy & Paste出來。<br/>
 所以我才想說乾脆大雜燴一番，把整隻章魚端出來，然後再把不要的手腳砍掉，
-把多餘的時間專注在專案本身。
+把多餘的時間專注在專案本身。<br/>
+專案的內容包括 Spring Web(RestFul),Spring Mobile, Spring Security
+(資料庫驗證或是使用OpenId驗證),多國語言,JPA(Hibernate),單元測試，整合測試，
+程式碼樣式檢查與程式品質檢驗。<br/>
+  一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
+其它的部分，我則認為應該保留。
 
 = 建立專案 =
 最快的方法當然是從命令列開始：
@@ -64,13 +69,4 @@ mvn site
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche5.png" alt="選擇Archetype" title="選擇Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche6.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
-
-　專案的內容包括 Spring Web(RestFul),Spring Mobile, Spring Security
-(資料庫驗證或是使用OpenId驗證),多國語言,JPA(Hibernate),單元測試，整合測試，
-程式碼樣式檢查與程式品質檢驗。<br/>
-  一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
-其它的部分，我則認為應該保留。
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+　
