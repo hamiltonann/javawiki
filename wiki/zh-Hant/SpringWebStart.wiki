@@ -30,7 +30,7 @@ Define value for property 'DomainName': : <輸入產生網頁SSL憑證的CN,如�
 Confirm properties configuration:
 Ｙ: :
 }}}
-然後建立專案(使用IDE的朋友可以參考最後的段落，使用[NetBean]或是[Eclipse]來建立專案）
+然後建立專案(使用IDE的朋友可以參考最後的段落，使用[NetBeans]或是[Eclipse]來建立專案）
 <br/>然後到Maven的安裝目錄，看一下mvn(或mvn.bat)內*MAVEN_OPTS的設定，考慮加大記憶體的使用如
 {{{
 MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
@@ -56,12 +56,6 @@ mvn site
   # 在 test/java下撰寫您的單視測試程式與整合測試程式(Class須以Test開頭)，並將之加到<b>testng-unit.xml</b>與<b>testng-integration.xml</b>內(本來是可以自動掃瞄的，但是大型專案的測試有時會跑到睡著，所以設定檔讓我們彈性指定要測試的程式)
 
 = 以IDE建立專案 =
-
-== NetBean ==
-<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
-<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/></div>
-<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
-然後建立專案
 == Eclipse ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche2.png" alt="選擇專案位置" title="選擇專案位置"/></div>
@@ -69,5 +63,10 @@ mvn site
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche4.png" alt="填入Archetype資訊" title="填入Archetype資訊"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche5.png" alt="選擇Archetype" title="選擇Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche6.png" alt="填入專案資訊" title="填入專案資訊"/></div>
+然後建立專案
+== NetBeans ==
+<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
+<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/></div>
+<div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
 　
