@@ -1,6 +1,6 @@
 #summary 快速使用Spring開發.
 #labels Featured,Phase-Implementation
-
+<wiki:toc max_depth="3" />
 說實在的，Spring框架是非常強大的工具，但是從入門到精通，實在是要花不少時
 間，長久寫下來，由其在Web開發上，其實就是那一套加加減減，每個專案都要先
 花一段時間，先把基本架構Copy & Paste出來。<br/>
