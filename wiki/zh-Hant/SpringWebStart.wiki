@@ -26,7 +26,6 @@ Define value for property 'groupId': : <輸入群組識別,如：com.yourcompany
 Define value for property 'artifactId': : <輸入專案名稱,如：TestSpringWeb>
 Define value for property 'version':  1.0-SNAPSHOT: : <輸入專案的版本，預設為 1.0-SNAPSHOT>
 Define value for property 'package':  com.spring: : <輸入套件名稱，預設為群組識別,為方便以下說明，此處定為com.spring>
-Define value for property 'DomainName': : <輸入產生網頁SSL憑證的CN,如：localhost>
 Confirm properties configuration:
 Ｙ: :
 }}}
@@ -55,7 +54,7 @@ mvn site
   # <b>applicationContext-security.xml</b>內有一個<b>port-mappings</b>設定, 開發測試時分別將http與ssl對應到8080與8443, 真正上線時，必須視實際環境修改。另外有指定Port的檔案分別是<b>pom.xml</b>與<b>testng-integration.xml</b>
   # 在 test/java下撰寫您的單視測試程式與整合測試程式(Class須以Test開頭)，並將之加到<b>testng-unit.xml</b>與<b>testng-integration.xml</b>內(本來是可以自動掃瞄的，但是大型專案的測試有時會跑到睡著，所以設定檔讓我們彈性指定要測試的程式)
 
-= SD4J說明 =
+= SD4J資料存取說明 =
 如果您看了DefaultController.java的源碼，您會發現我使用了[http://code.google.com/p/sd4j/ sd4j]，
 那是我寫的另外一個專案，該專案的概念只有兩個，其中Manager主導商業方法並控制交易，也就是裡面一些明顯看起來是資料異動的函式，已經是Transationable，
 而Dao則是真正主導資料存取，在程式中使用@DaoManager與＠Dao會自動進行注入([http://code.google.com/p/sd4j/ sd4j]要求環境中要存在一個
@@ -65,7 +64,7 @@ mvn site
     @DaoManager //自動注入
     private RepositoryManager<Member> memberManager;
 }}}
-若是您的自已要執行的商業方法，或是要有必要跨資料物件存取則自行繼承範例如下：
+若是您的自已要執行的商業方法(一般發生在特殊選取或是同時異動多個物件)，或是要有必要跨資料物件存取則自行繼承範例如下：
 {{{
 public class DetailManager extends AnnotatedRepositoryManager<Detail> {
   @Dao //自動注入
@@ -99,6 +98,66 @@ public class DetailManager extends AnnotatedRepositoryManager<Detail> {
 但是移除的同時，您也會發現失去一些便利，[http://code.google.com/p/sd4j/ sd4j]有DaoPropertyEditor與IntDaoPropertyEditor
 幫忙把Table 為整數或字串primary key轉成ORM物件，DefaultController.userinfo()就是直接把Key值變成Member物件，而不是傳
 回Key值後再去Lookup物件。
+
+= 安全性問題 =
+這是比較不好處理的議題，常常看到一些程式在每一支裡面都要放上身分檢查(包括我目前在維護的一些舊專案)，
+而[http://static.springsource.org/spring-security/site/ Spring Security(S.S)]把我從這些Ugly Code解救出來，但是
+Spring 本身已經有點難學了，更何況是Spring Security，早期版本的S.S叫做Acegi，其設定會讓人哭不出來，還好改名以後設定上簡化了不少，
+雖說如此，但設定起來也有點不容易，基本上我的設定已經考慮到大部分Web的使用情況，所以我會從說明如何快速設定後再來說明一些細節。
+== 快速設定 ==
+S.S的管控目標是URL,而人員管控則採用Role Base，相關設定參考applicationContext-security.xml, 
+例如我會設定 /admin/**只有ROLE_ADMIN(S.S習慣把角色命名為ROLE_XXXX), 可以進入，所以我設定
+{{{
+<intercept-url pattern="/admin/**" access="(hasIpAddress('192.168.0.0/16') or hasIpAddress('127.0.0.1')) and hasRole('ROLE_ADMIN')" requires-channel="any"/>
+}}}
+表示具有身分管理員的人在本機上或是公司內部的網路上才可使用 /admin/** 的網址，未登錄的人會導到登錄頁，而不符身分的人會接收到HTTP 403的訊息。
+範例程式的登錄頁在 /WEB-INF/view/login.jsp, 而所有安全性的錯誤全數導到同目錄的 error.jsp，請直接修改美化這兩頁的內容即可。
+S.S的預設登錄路徑在 contextPath下的 /j_spring_security_check，而登出在 /j_spring_security_logout.
+login.jsp的登錄頁有個選項：”_spring_security_remember_me“，勾選後會在該瀏覽器記錄該員資訊兩周，當登錄人員在二周內回來時，不用重新登錄就可取回
+該員所有身分角色，但這裡有個例外，RemeberMe設定當遇到存取權限為"fullyAuthenticated" 或是 "IS_AUTHENTICATED_FULLY"時，要求必須是經過登錄驗證，
+無法透過RemeberMe使用，像 /changePassword 就是這樣設定的，也就是必須直接登錄用戶才可使用。<br/>
+另外要特別說明的是intercept-ufl的requires-channel, 若是設為https時，表示即使您用http://....進來，會立即被redirect為https://...., 
+而S.S的登錄網址/j_spring_security_check被限定必須使用POST method，而redirect使用的是GET method，所以我的Login.jsp內設定的是
+{{{
+  <form action="https://..." method="POST">
+    ...
+}}}
+為什麼我在login.jsp就要求使用https，而不是到了/j_spring_security_check才使用SSL呢?<br/>
+那是因為遷涉到Session在什麼時候建立；SessionID記錄在Cookie的JSESSIONID內，若是Session在https://xxx/j_spring_security_check時才建立，
+則JSESSIONID會成為Secured Cookie，表示在回到正常的http下會看不到，所以S.S會在http下再重新建立一個新的Session，然後覆寫JSESSIONID Cookie，
+導致人員登錄資訊丟失，所以我才會在/login的時候就要求使用https, 而我其它的page全設為使用http，則至少進入首頁時就會建立Session
+(因為JSP的page session預設值為True)，通常S.S的設計不會有明確的登入鏈結，視需要時才會出現Login，這樣可保證Session是在http連線下建立。<br/>
+至於一些靜態網頁，則一律不經過S.S, 例如：
+{{{
+    <http pattern="/images" security="none"/>
+    <http pattern="/css" security="none"/>
+    <http pattern="/scripts" security="none"/>
+}}}
+同時看一下web.xml的`<servlet-mapping`>設定，我把一些附檔名的連結處理全交給default servlet處理。<br/>
+關於上述的access設定為什麼會有"fullyAuthenticated" 與 "IS_AUTHENTICATED_FULLY"呢？<br/>
+那是因為後期的Spring採用的所謂的表達式語法(SpEL)，在設定上會比較彈性，分辨的方法是舊的設定採用全大寫，而SpEL則比較像是程式碼的片段。
+相關的access設定請參考[http://static.springsource.org/spring-security/site/docs/3.1.x/reference/el-access.html#el-common-built-in 這裡]
+與[http://grails-plugins.github.com/grails-spring-security-core/docs/manual/guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html這裡]。
+== Session Fixation ==
+首先要說明JSP的一個弱點[http://knowledge.twisc.ntust.edu.tw/doku.php?id=3%E4%BC%BA%E6%9C%8D%E7%AB%AF%E5%AE%89%E5%85%A8:3-2%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E5%BC%B1%E9%BB%9E:session%E5%9B%BA%E5%AE%9A%E6%94%BB%E6%93%8A Session Fixation], 
+[http://en.wikipedia.org/wiki/Session_fixation Session Fixation]源起於JSESSIONID曝露在URL內，所以我們首先必須把`<http`>的屬性 disable-url-rewriting 設為 true
+以防止URL rewrite把;jsessionid加掛到網址列。<br/>
+另外S.S為了防止[http://static.springsource.org/spring-security/site/docs/3.1.x/reference/ns-config.html#ns-session-fixation Session Fixation]
+也建議將`<session-management`>的session-fixation-protection設為migrateSession(每次登錄後重建一個新的Session並抄錄將舊Session的內容)
+或是newSession(每次登錄後重建一個新的Session)，但是為了上述所說SSL登錄所產生的Session丟失問題，所以只好𢖫痛設為"none"。<br/>
+為了完整解決這個問題，可以改採登錄OpenId的方式，用http轉到OpenID網站，再讓OpendID轉用https來解決這個問題。
+而且一個企業內通常不時會新增一些系統，所以我另外寫了一個[http://code.google.com/p/oisso/ OpenID半成品]的專案，
+並依我所服務的公司的狀況改寫並應用。如果您不需要，可將範例程式看到OpenId名稱的檔案全數移除。
+== Ajax安全性 ==
+當存取的網址須登錄或是沒有存取權限時，S.S會把網頁導到登錄頁或是錯誤頁，但顯然在Ajax這是行不通的。<br/>
+所以有預設放了一支程式AjaxAwareLoginUrlAuthenticationEntryPoint.java針對明確是使用Ajax進入或是路徑包含了/json的網址視為Ajax存取，直接回應錯誤，
+如果您有其它的考量，請自行修改這支程式。
+= Controller使用參數 =
+如果您看了DefaultController，您會發現每個Spring的Controller不會像Struts那樣需要一個execute(mapping,form,request,response)，
+基本上函式名稱隨便自已取，[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-arguments 參數]隨便放
+(因為範例使用的Spring Mobile，所以可以多放一個Device參數)，Spring叫用時，會自個把該填的參數自已填上去，且
+[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-return-types 回傳值]也可自行決定(多半是String)。<br/>
+另外，如何放一些我們自個兒的參數？<br/>
 
 = 以IDE建立專案 =
 == NetBeans ==
