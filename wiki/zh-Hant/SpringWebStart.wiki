@@ -181,8 +181,7 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 另外，如何放一些我們自個兒的參數？<br/>
 
 = 以IDE建立專案 =
-<a name="NetBeans"/>
-== NetBeans ==
+== NetBean&#115; ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
