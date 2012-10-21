@@ -46,7 +46,7 @@ mvn site
 
 = 快速開始 =
   # 套件目錄<b>com.spring.context</b>與<b>com.spring.controller</b>會自動掃瞄可自動建立的Bean，所以建議將公用程式放到Context套件下而將Spring Controller則放到controller套件下
-  # 所有Spring設的的進入點在<b>ApplicationContext.java(applicationContext.xml)</b>，然後包入其它設定檔，例如要Security要使用OpenId而不是資料庫，請將import的<b>applicationContext-security.xml</b>換成<b>applicationContext-openid.xml</b>
+  # 所有Spring設的的進入點在<b>ApplicationContext.java(由此載入applicationContext.xml)</b>，然後包入其它設定檔，例如要Security要使用OpenId而不是資料庫，請將import的<b>applicationContext-security.xml</b>換成<b>applicationContext-openid.xml</b>
   # 所有jsp檔案全放到 WEB-INF/view目錄下，如果要直接從網止列存取，請到<b>applicationContext-mvc.xml</b>內新增設定<b>mvc:view-controller</b>，並考慮是否在<b>applicationContext-security.xml</b>增加一個intercept-url做權限管控
   # 在pom.xml內加入您資料庫的函式參考，並開啟<b>applicationContext.xml</b>，修改 id="appProperies" 內所有JDBC與Hibernate的參數，以適用您的資料庫設定。
   # 因為此模版程式無法連結真實資料庫，所以內附了一個記憶體資料庫，您既然已使用了實體資料庫，所以可以把*applicationContext.xml的<b>jdbc:initialize-database</b>移除並刪除檔案realSchema.sql
@@ -200,6 +200,15 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 您也許會奇怪，request.getParameter取得的是String，倒底是如何變成了物件Member?上面也說過，參數只能對應到一些簡單型態，
 所以請看DefaultController.initBinder()，WebDataBinder.registerCustomEditor()，註冊了數種轉換方式，
 當參數裡出現了不解的型態，Spring MVC就會找尋有無註冊的轉換物件，我就是透過這種方式由account找出資料庫中對應的Member物件。
+
+= 測試 =
+== 測試資料 ==
+首先測試要有資料，直接連到資料庫，顯然不是好的方法，萬一上線後有需求變更，改到真實資料就不妙了。
+ 
+所以我建議的是使用[http://en.wikipedia.org/wiki/In-memory_database 記憶體資料庫]，也就是資料庫只存在於記憶體當中。[http://www.h2database.com/html/main.html H2]與[http://hsqldb.org/ HyperSQL]
+都是不錯的選擇。
+
+首先看 testContext.xml 我用了jdbc:initialize-database在測試程式開始時執行SQL Script，進行資料庫的DDL與DML作業。
 
 = 以IDE建立專案 =
 == Net Beans ==
