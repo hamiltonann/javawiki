@@ -186,7 +186,8 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
     public String userinfo(@PathVariable Member account, HttpServletRequest request) {
       ...
 }}}
-其中的`{account`}就是模板變數,可直接放到參數列內(主要是int與String，其它型態要再處理)，或者我們常用如：
+其中的`{account`}就是模板變數,當http://localhost/xxx/user/admin，account參數會代入到參數列內(主要是int與String，其它型態要再處理)，
+或者我們常用如：
 {{{
    String account = request.getParameter("account");
 }}}
