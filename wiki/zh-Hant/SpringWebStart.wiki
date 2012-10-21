@@ -29,7 +29,7 @@ Define value for property 'package':  com.spring: : <輸入套件名稱，預設
 Confirm properties configuration:
 Ｙ: :
 }}}
-然後建立專案(使用IDE的朋友可以參考最後的段落，使用[#Net Beans NetBeans]或是[#Eclipse Eclipse]來建立專案）
+然後建立專案(使用IDE的朋友可以參考最後的段落，使用[#Net_Beans NetBeans]或是[#Eclipse Eclipse]來建立專案）
 <br/>然後到Maven的安裝目錄，看一下mvn(或mvn.bat)內*MAVEN_OPTS的設定，考慮加大記憶體的使用如
 {{{
 MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
@@ -178,7 +178,27 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 基本上函式名稱隨便自已取，[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-arguments 參數]隨便放
 (因為範例使用的Spring Mobile，所以可以多放一個Device參數)，Spring叫用時，會自個把該填的參數自已填上去，且
 [http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-return-types 回傳值]也可自行決定(多半是String)。<br/>
-另外，如何放一些我們自個兒的參數？<br/>
+除此之外，參數還可以是[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestmapping-uri-templates 模板變數]與
+[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-ann-requestparam request參數]，
+模板變數就像是DefaultController裡面的userinfo函式
+{{{
+    @RequestMapping("/admin/user/{account}")
+    public String userinfo(@PathVariable Member account, HttpServletRequest request) {
+      ...
+}}}
+其中的`{account`}就是模板變數,可直接放到參數列內(主要是int與String，其它型態要再處理)，或者我們常用如：
+{{{
+   String account = request.getParameter("account");
+}}}
+也可放入變成參數，如http://localhost/xxx/admin/user?account=admin
+{{{
+    @RequestMapping("/admin/user")
+    public String userinfo(@RequestParam Member account, HttpServletRequest request) {
+      ...
+}}}
+您也許會奇怪，request.getParameter取得的是String，倒底是如何變成了物件Member?上面也說過，參數只能對應到一些簡單型態，
+所以請看DefaultController.initBinder()，WebDataBinder.registerCustomEditor()，註冊了數種轉換方式，
+當參數裡出現了不解的型態，Spring MVC就會找尋有無註冊的轉換物件，我就是透過這種方式由account找出資料庫中對應的Member物件。
 
 = 以IDE建立專案 =
 == Net Beans ==
