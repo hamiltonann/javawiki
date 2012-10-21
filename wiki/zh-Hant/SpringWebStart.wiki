@@ -29,7 +29,7 @@ Define value for property 'package':  com.spring: : <輸入套件名稱，預設
 Confirm properties configuration:
 Ｙ: :
 }}}
-然後建立專案(使用IDE的朋友可以參考最後的段落，使用[NetBeans]或是[Eclipse]來建立專案）
+然後建立專案(使用IDE的朋友可以參考最後的段落，使用[#NetBeans NetBeans]或是[#Eclipse Eclipse]來建立專案）
 <br/>然後到Maven的安裝目錄，看一下mvn(或mvn.bat)內*MAVEN_OPTS的設定，考慮加大記憶體的使用如
 {{{
 MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
@@ -46,7 +46,7 @@ mvn site
 
 = 快速開始 =
   # 套件目錄<b>com.spring.context</b>與<b>com.spring.controller</b>會自動掃瞄可自動建立的Bean，所以建議將公用程式放到Context套件下而將Spring Controller則放到controller套件下
-  # 所有Spring設的的進入點在<b>applicationContext.xml</b>，然後包入其它設定檔，例如要Security要使用OpenId而不是資料庫，請將import的<b>applicationContext-security.xml</b>換成<b>applicationContext-openid.xml</b>
+  # 所有Spring設的的進入點在<b>ApplicationContext.java(applicationContext.xml)</b>，然後包入其它設定檔，例如要Security要使用OpenId而不是資料庫，請將import的<b>applicationContext-security.xml</b>換成<b>applicationContext-openid.xml</b>
   # 所有jsp檔案全放到 WEB-INF/view目錄下，如果要直接從網止列存取，請到<b>applicationContext-mvc.xml</b>內新增設定<b>mvc:view-controller</b>，並考慮是否在<b>applicationContext-security.xml</b>增加一個intercept-url做權限管控
   # 在pom.xml內加入您資料庫的函式參考，並開啟<b>applicationContext.xml</b>，修改 id="appProperies" 內所有JDBC與Hibernate的參數，以適用您的資料庫設定。
   # 因為此模版程式無法連結真實資料庫，所以內附了一個記憶體資料庫，您既然已使用了實體資料庫，所以可以把*applicationContext.xml的<b>jdbc:initialize-database</b>移除並刪除檔案realSchema.sql
