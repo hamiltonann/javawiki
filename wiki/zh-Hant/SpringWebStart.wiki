@@ -9,7 +9,7 @@
 專案的內容包括 Spring Web(RESTful),Spring Mobile，Spring Security
 (資料庫驗證或是使用OpenId驗證),多國語言,JPA(Hibernate),單元測試，整合測試，
 程式碼樣式檢查與程式品質檢驗。<br/>
-  一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
+一般來說，我認為可以移除的部分包括Spring Mobile，多國語言，JPA(換上您自個兒習慣的ORM)。 
 其它的部分，我則認為應該保留。
 
 = 建立專案 =
@@ -158,7 +158,7 @@ SessionID記錄在Cookie的JSESSIONID內，若是Session在https://xxx/j_spring_
 以防止URL rewrite把;jsessionid加掛到網址列。
 
 另外S.S為了防止[http://static.springsource.org/spring-security/site/docs/3.1.x/reference/ns-config.html#ns-session-fixation Session Fixation]
-也建議將`<session-management`>的session-fixation-protection設為migrateSession(預設，每次登錄後重建一個新的Session並抄錄將舊Session的內容)
+也建議將`<session-management`>的session-fixation-protection設為migrateSession(預設，每次登錄後重建一個新的Session並抄錄舊Session的內容)
 或是newSession(每次登錄後重建一個新的Session)，但是因為範例程式的登錄是在SSL下進行，若是登錄後重建一個新的Session，那麼回到http時，
 將因為無法看到Secuired Cookie，而jsp又會重新在http重建一個新Session，產生新的JSESSIONID去覆蓋SSL下產生的Secured同名Cookid，因而導致
 SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session丟失問題，所以只好𢖫痛將之設為"none"。
@@ -201,6 +201,15 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 所以請看DefaultController.initBinder()，WebDataBinder.registerCustomEditor()，註冊了數種轉換方式，
 當參數裡出現了不解的型態，Spring MVC就會找尋有無註冊的轉換物件，我就是透過這種方式由account找出資料庫中對應的Member物件。
 
+= 多國語系支援 =
+範例程式包含了多國語系支援，請編輯messages properties檔案，若是您不想用其實也不用特地移除相關檔案，因為在messages_zh_TW.properties有我將
+Spring Security的中文化的訊息。<br/>
+若是使用了多國語系支援, 無論是單視測試或是整合測試都必須要小心回應的訊息，可能因測試機器預設語系的不同而有所不同。<br/>
+在單元測試時，當多國語系存在時，必須將語系固定在某一個語系上，否則可能會因為機器預設語系的不同而得到不同的結果。
+所以在 testContext.xml 內的`<bean id="messageAccessor" .../`>的第二個建構參數，我設為固定的語系，以便在測試時能得到預期的結果。
+但若是整合測試時，由於整合測試為實際啟動WebServer，所以請在reqeust URL後面加上參數如：http`://localhost:8080/user/myinfo`?<b>locacle=en_US</b>
+
+若您真的不須要多國語系，請移除 applicationContext-mvc.xml 
 = 測試 =
 == 測試資料 ==
 首先測試要有資料，直接連到資料庫，顯然不是好的方法，萬一上線後有需求變更，改到真實資料就不妙了。
@@ -209,7 +218,9 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 都是不錯的選擇。
 
 首先看 testContext.xml 我用了jdbc:initialize-database在測試程式開始時執行SQL Script，進行資料庫的DDL與DML作業。
-
+== 單元測試 ==
+  # Maven由[http://maven.apache.org/plugins/maven-surefire-plugin/ maven-surefire-plugin]幫助進行單元測試，若是pom.xml內沒有特別設定，則[http://maven.apache.org/plugins/maven-surefire-plugin/test-mojo.html#includes 預設]以Test開頭、結尾或是以TestCase結尾的Java檔作為測試標的。
+  # 測試程式若是需要載入Spring Context環境，則可以繼承http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/testng/AbstractTestNGSpringContextTests.html AbstractTestNGSpringContextTests]([http://testng.org testNG])、[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit4/AbstractJUnit4SpringContextTests.html AbstractJUnit4SpringContextTests](Junit4)或是[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit38/AbstractJUnit38SpringContextTests.html AbstractJUnit38SpringContextTests](Junit 3.8)
 = 以IDE建立專案 =
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
