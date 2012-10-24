@@ -200,6 +200,19 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 您也許會奇怪，request.getParameter取得的是String，倒底是如何變成了物件Member?上面也說過，參數只能對應到一些簡單型態，
 所以請看DefaultController.initBinder()，WebDataBinder.registerCustomEditor()，註冊了數種轉換方式，
 當參數裡出現了不解的型態，Spring MVC就會找尋有無註冊的轉換物件，我就是透過這種方式由account找出資料庫中對應的Member物件。
+Spring本身也提供了一些預設的[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/beans/propertyeditors/package-summary.html 轉換物件]，
+若是有用到也請在initBinder()自行註冊。
+
+此外，還可以放一個參數[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/web/multipart/MultipartFile.html MultipartFile]表示
+[http://static.springsource.org/spring/docs/current/spring-framework-reference/html/mvc.html#mvc-multipart-forms 上傳]的檔案，
+但是在此範例程式並未啟用相關設定，若要啟用相關設定，請打開 applicationContext-mvc.xml 啟用 multipartResolver 設定。
+若要測試上傳檔案，也請將 multipartResolver 設定抄錄到 testContext.xml 內，然後使用測試程式如下：
+{{{
+    ...
+    mockMultipartHttpServletRequest.setParameter("point", "10");
+    mockMultipartHttpServletRequest.addFile(new MockMultipartFile("檔案欄位名稱",...);
+    ...
+}}}
 
 = 多國語系支援 =
 範例程式包含了多國語系支援，請編輯messages properties檔案，若是您不想用其實也不用特地移除相關檔案，因為在messages_zh_TW.properties有我將
@@ -208,8 +221,10 @@ Spring Security的中文化的訊息。<br/>
 在單元測試時，當多國語系存在時，必須將語系固定在某一個語系上，否則可能會因為機器預設語系的不同而得到不同的結果。
 所以在 testContext.xml 內的`<bean id="messageAccessor" .../`>的第二個建構參數，我設為固定的語系，以便在測試時能得到預期的結果。
 但若是整合測試時，由於整合測試為實際啟動WebServer，所以請在reqeust URL後面加上參數如：http`://localhost:8080/user/myinfo`?<b>locacle=en_US</b>
+以便檢測網頁實際產生的內容。
 
-若您真的不須要多國語系，請移除 applicationContext-mvc.xml 
+若您真的不須要多國語系，請移除 applicationContext.xml、applicationContext-mvc.xml與testContext.xml 所有標為i18n的設定。
+
 = 測試 =
 == 測試資料 ==
 首先測試要有資料，直接連到資料庫，顯然不是好的方法，萬一上線後有需求變更，改到真實資料就不妙了。
@@ -220,7 +235,11 @@ Spring Security的中文化的訊息。<br/>
 首先看 testContext.xml 我用了jdbc:initialize-database在測試程式開始時執行SQL Script，進行資料庫的DDL與DML作業。
 == 單元測試 ==
   # Maven由[http://maven.apache.org/plugins/maven-surefire-plugin/ maven-surefire-plugin]幫助進行單元測試，若是pom.xml內沒有特別設定，則[http://maven.apache.org/plugins/maven-surefire-plugin/test-mojo.html#includes 預設]以Test開頭、結尾或是以TestCase結尾的Java檔作為測試標的。
-  # 測試程式若是需要載入Spring Context環境，則可以繼承http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/testng/AbstractTestNGSpringContextTests.html AbstractTestNGSpringContextTests]([http://testng.org testNG])、[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit4/AbstractJUnit4SpringContextTests.html AbstractJUnit4SpringContextTests](Junit4)或是[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit38/AbstractJUnit38SpringContextTests.html AbstractJUnit38SpringContextTests](Junit 3.8)
+  # 測試程式若是需要載入Spring Context環境，則可以繼承[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/testng/AbstractTestNGSpringContextTests.html AbstractTestNGSpringContextTests]([http://testng.org testNG])、[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit4/AbstractJUnit4SpringContextTests.html AbstractJUnit4SpringContextTests](Junit4)或是[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit38/AbstractJUnit38SpringContextTests.html AbstractJUnit38SpringContextTests](Junit 3.8)
+  # 一般性的功能測試請inject相關的Bean進來測試就行了，測試Spring Web的功能，請參考測試程式TestDefaultController`.java，最終的測試報告請查看 target/surefire-reports/index.html。
+<b>注意的事</b>：pom.xml內`<reporting`>下有一個cobertura-maven-plugin，在產生報表時，在檢測測試涵蓋率(良葛格有[http://caterpillar.onlyfun.net/Gossip/JUnit/Cobertura.html 介紹])，
+因為不支援JDK7，若您使用JDK7，請將該plugin段落移除。
+
 = 以IDE建立專案 =
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
