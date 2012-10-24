@@ -38,7 +38,7 @@ MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
 {{{
 mvn verify
 }}}
-就可以看到整個專案從compile到整合測試的所有階段,最後執行
+就可以看到整個專案從compile到整合測試(含軟體檢測)的所有階段,最後執行
 {{{
 mvn site
 }}}
@@ -130,8 +130,9 @@ login.jsp的登錄頁有個選項：”_spring_security_remember_me“，勾選�
 才參避免產生錯誤。
 
 另外一個議題是Session是在http連線或是https建立，其結果大不同。<br/>
-SessionID記錄在Cookie的JSESSIONID內，若是Session在https://xxx/j_spring_security_check時才建立，
-則JSESSIONID會成為Secured Cookie，表示只有在https連線,Cookie才會被送回主機；
+SessionID記錄在Cookie的JSESSIONID內，若是Session在https://xxx/j_spring_security_check 時才建立，
+則JSESSIONID會成為Secured Cookie，表示只有在https連線,Cookie才會被送回主機，所以在回到http連線時無法得知之前建立的Session，
+所以有可能再建立一個新的Session產生新的JSESSIONID Cookie覆蓋原有的Session ID；
 若是Session建立於http連線，則http下建立的JSESSIONID Cookie，在SSL連線時時也會被送回，
 亦即，若Session建立在https時只能在SSL連線下被看見，反之則不然，所以為了保持Sesson的一致，最好的方式就是在http下建立Session。
 
@@ -148,9 +149,10 @@ SessionID記錄在Cookie的JSESSIONID內，若是Session在https://xxx/j_spring_
 同時看一下web.xml的`<servlet-mapping`>設定，我把一些附檔名的連結處理全交給default servlet處理。
 
 關於上述的access設定為什麼會有"fullyAuthenticated" 與 "IS_AUTHENTICATED_FULLY"呢？<br/>
-那是因為後期的Spring採用的所謂的表達式語法(SpEL)，在設定上會比較彈性，分辨的方法是舊的設定採用全大寫，而SpEL則比較像是程式碼的片段。
+那是因為後期的Spring採用的所謂的表達式語法([http://static.springsource.org/spring/docs/current/spring-framework-reference/html/expressions.html SpEL])
+，在設定上會比較彈性，分辨的方法是舊的設定採用全大寫，而SpEL則比較像是程式碼的片段。
 相關的access設定請參考[http://static.springsource.org/spring-security/site/docs/3.1.x/reference/el-access.html#el-common-built-in 這裡]
-與[http://grails-plugins.github.com/grails-spring-security-core/docs/manual/guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html這裡]。
+與[http://grails-plugins.github.com/grails-spring-security-core/docs/manual/guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html 這裡]。
 
 == Session Fixation ==
 首先要說明JSP的一個弱點[http://knowledge.twisc.ntust.edu.tw/doku.php?id=3%E4%BC%BA%E6%9C%8D%E7%AB%AF%E5%AE%89%E5%85%A8:3-2%E6%87%89%E7%94%A8%E7%A8%8B%E5%BC%8F%E5%BC%B1%E9%BB%9E:session%E5%9B%BA%E5%AE%9A%E6%94%BB%E6%93%8A Session Fixation]，
@@ -236,10 +238,35 @@ Spring Security的中文化的訊息。<br/>
 == 單元測試 ==
   # Maven由[http://maven.apache.org/plugins/maven-surefire-plugin/ maven-surefire-plugin]幫助進行單元測試，若是pom.xml內沒有特別設定，則[http://maven.apache.org/plugins/maven-surefire-plugin/test-mojo.html#includes 預設]以Test開頭、結尾或是以TestCase結尾的Java檔作為測試標的。
   # 測試程式若是需要載入Spring Context環境，則可以繼承[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/testng/AbstractTestNGSpringContextTests.html AbstractTestNGSpringContextTests]([http://testng.org testNG])、[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit4/AbstractJUnit4SpringContextTests.html AbstractJUnit4SpringContextTests](Junit4)或是[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit38/AbstractJUnit38SpringContextTests.html AbstractJUnit38SpringContextTests](Junit 3.8)
-  # 一般性的功能測試請inject相關的Bean進來測試就行了，測試Spring Web的功能，請參考測試程式TestDefaultController`.java，最終的測試報告請查看 target/surefire-reports/index.html。
-<b>注意的事</b>：pom.xml內`<reporting`>下有一個cobertura-maven-plugin，在產生報表時，在檢測測試涵蓋率(良葛格有[http://caterpillar.onlyfun.net/Gossip/JUnit/Cobertura.html 介紹])，
+  # 一般性的功能測試請inject相關的Bean進來測試就行了，測試Spring Web的功能，請參考測試程式TestDefaultController.java，最終的測試報告請查看 target/surefire-reports/index.html。
+<b>注意的事</b>：pom.xml內`<reporting`>下有一個cobertura-maven-plugin，產生檢測測試涵蓋率(良葛格有[http://caterpillar.onlyfun.net/Gossip/JUnit/Cobertura.html 介紹])報表，
 因為不支援JDK7，若您使用JDK7，請將該plugin段落移除。
+== 整合測試 ==
+這裡要說明的是整合測試實際上會把Web上起來實測，所以請注意http與https的Port是否有被其它程式佔用，
+範例程式採用Jetty進行測試，您也可以以下列命令直接將WEB程式上起來。
+{{{
+    mvn jetty:run 或是 mvn tomcat7:run
+}}}
+或是以
+{{{
+    mvn integration-test
+}}}
+進行整合測試，若是您要採用Tomcat進行測試，請打開pom.xml，
+  # 把｀<build`>內的 jetty-maven-plugin 段落移除
+  # 把｀<build`>內的 tomcat7-maven-plugin 段落內的`<executions`>啟用，然後把`<fork`>設為True(因為Tomcat7若不採用另一個JDK執行，測試後將無法正常關閉)
+整合測試完成後，最後報表會產出在target/failsafe-reports/index.html
+== 軟體品質檢測 ==
+若您是使用
+{{{
+   mvn verify
+}}}
+則會再執行[http://pmd.sourceforge.net/ PMD]源碼檢測與[http://findbugs.sourceforge.net/ findbugs]檢測，兩者在`<build`>與`<reporting`>內都有設定，
+也就是說使用 <b>mvn site</b> 產生報表時會再執行一次，因為PMD查出問題時，並不代表程式一定有錯，也許是多個“；”號或是多import 了一個沒有用到的Class，
+但是卻會造成verify報錯，或許您可以考慮把`<build`>內的maven-pmd-plugin移除。
 
+或許您也會奇怪，為何`<build`>與`<reporting`>為何設定了一些同樣的plugin?
+  # 首先是因為Maven無法將`<build`>與`<reporting`>統一管理(您或許看過，有一些`<xxxManagement `>, 那是就來多模組時作為集中管理的tag)
+  # 另外是考慮到，您可能單獨執行某些命令，如 <b>mvn findbugs:check</b> 或是 <b>mvn javadoc:javadoc</b> ，那麼就只能設定在`<build`>內，與`<reporting`>產生報表的設定無關。
 = 以IDE建立專案 =
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
