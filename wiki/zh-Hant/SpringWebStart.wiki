@@ -33,7 +33,7 @@ Confirm properties configuration:
 {{{
 MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
 }}}
-然後執行
+然後執行(JDK7朋友請看一下[#%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6 單元測試]的注意事項)
 {{{
 mvn verify
 }}}
