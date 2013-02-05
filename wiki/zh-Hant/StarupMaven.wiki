@@ -962,7 +962,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
   設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
 
-== WEB靜態資源最佳化 ==
+= WEB靜態資源最佳化 =
   最近想到寫個plugin把要使用的JavaScript用[http://code.google.com/p/closure-compiler/ Google Closure]加壓後再打包，寫了寫才發現原來已經有人
   早就想到了，[http://code.google.com/p/wro4j wro4j]認為在HTTP下載一個大檔案的效率，遠比下載兩個分割檔案，所以[http://code.google.com/p/wro4j wro4j]
   最主要的功用就是把所有用到的css或者是js檔案(無論是本地或是遠端)打成一包，以供一次性下載。
