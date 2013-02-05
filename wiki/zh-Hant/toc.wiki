@@ -26,6 +26,7 @@
       * [StarupMaven#PMD PMD]                                                                       
       * [StarupMaven#FindBugs FindBugs]                                                               
       * [StarupMaven#Checkstyle Checkstyle]
+    * [StarupMaven#WEB%E9%9D%9C%E6%85%8B%E8%B3%87%E6%BA%90%E6%9C%80%E4%BD%B3%E5%8C%96 WEB靜態資源最佳化]
   * [Cordova Cordova(PhoneGap)]
     * [Cordova#%E9%96%8B%E5%A7%8B%E4%B9%8B%E5%89%8D 開始之前]
     * [Cordova#%E5%AE%89%E8%A3%9DAndroid_SDK 安裝Android SDK]
@@ -55,6 +56,5 @@
     * [SpringWebStart#%E4%BB%A5IDE%E5%BB%BA%E7%AB%8B%E5%B0%88%E6%A1%88 以IDE建立專案]
       * [SpringWebStart#Net_Beans Netbeans]
       * [SpringWebStart#Eclipse Eclipse]
-    * [SpringWebStart#WEB%E9%9D%9C%E6%85%8B%E8%B3%87%E6%BA%90%E6%9C%80%E4%BD%B3%E5%8C%96 WEB靜態資源最佳化]
   
   * [ChangeLog 改版記錄]                                                            
