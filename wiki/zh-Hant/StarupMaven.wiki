@@ -222,7 +222,7 @@ mvn compiler:compile
 }}}
 以下是一些預設變數的列表
 ||${basedir} ||表示包含pom.xml的目錄路徑 ||
-||${version}||等同${project.version}或${pom.version}，即程式的版本編號 ||
+||${version}||等同${project.version}或${pom.version}，即程式的版本編號(maven通常建議不要直接使用${version}) ||
 ||${project.build.directory} ||就是target目錄，等同${pom.project.build.directory} ||
 ||${project.build.outputDirectory}||就是target/classes目錄||
 ||${project.name} 或 ${pom.name} ||就是pom.xml '<name'>所指定的名稱||
@@ -321,7 +321,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 		<resources>
 			<resource>
 				<directory>${basedir}/src/main/java</directory><!--資源檔存放路徑-->
-				<filtering>false</filtering><!--不置換資源檔內容,如果要的話見這裡-->
+				<filtering>false</filtering><!--不置換資源檔內容,如果要的話見http://maven.apache.org/plugins/maven-resources-plugin/examples/filter.html-->
 				<includes>
 					<include>org/gwtwidgets/Stream.gwt.xml</include>
 				</includes>
@@ -961,3 +961,65 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 ||config/avalon_checks.xml||Avalon定義開發風格||
 
   設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
+
+== WEB資源最佳化 ==
+  最近想到寫個plugin把要使用的JavaScript用[http://code.google.com/p/closure-compiler/ Google Closure]加壓後再打包，寫了寫才發現原來已經有人
+  早就想到了，[http://code.google.com/p/wro4j wro4j]認為在HTTP下載一個大檔案的效率，遠比下載兩個分割檔案，所以[http://code.google.com/p/wro4j wro4j]
+  最主要的功用就是把所有用到的css或者是js檔案(無論是本地或是遠端)打成一包，以供一次性下載。
+  
+  它的作法分兩種，一種是即時(Runtime)將用到的檔案進行合併壓縮，另一種就是事先把資源檔緊實化，然後放入打包檔後一起發佈。
+  
+  我要介紹的是後者。首先引入Plugin設定
+  {{{
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>ro.isdc.wro4j</groupId>
+              <artifactId>wro4j-maven-plugin</artifactId>
+              <version>${wro4j.version}</version>
+              <executions>
+                  <execution>
+                      <phase>compile</phase><!--可省略，預設就是在compile階段執行-->
+                      <goals>
+                          <goal>run</goal>
+                      </goals>
+                  </execution>
+              </executions>
+              <configuration>
+                  <targetGroups>all</targetGroups>
+                  <minimize>true</minimize>
+                  <destinationFolder>${basedir}/src/main/webapp/wro/</destinationFolder>
+                  <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+              </configuration>
+            </plugin>
+  }}}
+  然後在WEB-INF/下建立一個[http://code.google.com/p/wro4j/wiki/WroFileFormat wro.xml]如下：
+  {{{
+  <?xml version="1.0" encoding="UTF-8"?>
+  <groups xmlns="http://www.isdc.ro/wro">
+    <group name='all'>
+      <!--指定的JQuery已經是緊實化了，所以設定 minimize="false"以節省處理時間-->
+      <js minimize="false">http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js</js>
+      <js>/js/main.js</js>
+      <css>/css/screen.css</css>
+    </group>
+    <group name='dev'>
+      <js minimize="false">http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js</js>
+      <js>/js/main-dev.js</js>
+      <css>/css/screen.css</css>
+    </group>
+  </groups>
+  }}}
+  最後則是引用
+  {{{
+  <html>
+  <head>
+    <title>Web Frameworks Comparison</title>
+    <link rel="stylesheet" type="text/css" href="wro/all.css" />
+    <script type="text/javascript" src="wro/all.js"></script>
+  </head>
+  <body>
+    //Body
+  </body>
+</html>
+  }}}
