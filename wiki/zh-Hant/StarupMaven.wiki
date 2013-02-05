@@ -962,7 +962,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
   設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
 
-== WEB資源最佳化 ==
+== WEB靜態資源最佳化 ==
   最近想到寫個plugin把要使用的JavaScript用[http://code.google.com/p/closure-compiler/ Google Closure]加壓後再打包，寫了寫才發現原來已經有人
   早就想到了，[http://code.google.com/p/wro4j wro4j]認為在HTTP下載一個大檔案的效率，遠比下載兩個分割檔案，所以[http://code.google.com/p/wro4j wro4j]
   最主要的功用就是把所有用到的css或者是js檔案(無論是本地或是遠端)打成一包，以供一次性下載。
@@ -988,8 +988,8 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
               <configuration>
                   <targetGroups>all</targetGroups>
                   <minimize>true</minimize>
-                  <destinationFolder>${basedir}/src/main/webapp/wro/</destinationFolder>
                   <contextFolder>${basedir}/src/main/webapp/</contextFolder>
+                  <destinationFolder>${basedir}/src/main/webapp/wro/</destinationFolder>
               </configuration>
             </plugin>
   }}}
@@ -1018,8 +1018,14 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
     <link rel="stylesheet" type="text/css" href="wro/all.css" />
     <script type="text/javascript" src="wro/all.js"></script>
   </head>
-  <body>
+    <body>
     //Body
-  </body>
-</html>
+    </body>
+  </html>
   }}}
+  這裡要說明的是plugin的參數設定
+  
+||targetGroups||在此指定了all，所以只會處理group name='all'的設定，若不指定則會處理所有的group，<br/>也就是除了all.css,all.js外還會產生dev.css與dev.js||
+||minimize||預設值為true，若是在開發階段時，可設為false，方便利用firebug或是chrome的開發工具進行除錯||
+||contextFolder||指定web程式的所在||
+||destinationFolder||指定緊實化的產出目的目錄||
