@@ -568,7 +568,7 @@ scm通常有帳號/密碼的問題，當然直接寫在pom.xml內不是不行，
 </servers>
 }}}
 執行 "mvn scm:bootstrap" 您可以發現程式不但下載，且立即執行打包作業
-
+     
 == 版本衝突管理 ==
 
 maven用久了，您就會發現這個問題：比如說您的pom 同時引用了如下：
@@ -667,6 +667,11 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 }}}
 顯然， org.springframework.core的版本問題解決了，當然裡面還是有幾個3.0.3，如果要全面換用3.0.5版，只要引用新的3.0.5版的dependency，然後在 spring-security-core的 exclusions 裡把那些3.0.3版的排除掉即可。
 
+=== 最新版本檢查 ===
+有時後在程式發佈前，想看看是否有更新的版本存在，可以執行
+  "mvn versions:display-dependency-updates" 檢查使用的函式庫有那些更新的版本
+  "mvn versions:display-plugin-updates" 檢查使用的Plugin有那些更新的版本
+     
 == Profile ==
 有時候我們必須依環境不同，而有不同的作法，所以可以用Profile將各個Plugin作區別設定，
 然後以 "mvn -P設定" 來決定要如何執行特定的Plugin。
@@ -801,7 +806,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
 == 軟體品質保證 ==
   也許專案從開始到發佈，經歷編譯與測試都沒有錯，但是專案源碼，可能是資深與資淺人員一同撰寫而成的，難道他們所撰寫的源碼都保持一致的品質嗎?
-  這也許是個問題，所以我要介紹兩個檢測工具，[http://pmd.sourceforge.net PMD]與 [http://findbugs.sourceforge.net FindBugs].
+  這也許是個問題，所以我要介紹兩個檢測工具，[http://pmd.sourceforge.net PMD]、[http://findbugs.sourceforge.net FindBugs] 與 [http://www.eclemma.org/jacoco/trunk/doc/maven.html JaCoCo].
 
 === PMD ===
   [http://pmd.sourceforge.net PMD]是針對源碼進行可能的檢測，我們要在Maven內使用其功能，就必須導入[http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin].
@@ -961,7 +966,40 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 ||config/avalon_checks.xml||Avalon定義開發風格||
 
   設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
+  
+=== JaCoCo ===
+  [http://www.eclemma.org/jacoco/trunk/index.html JaCoCo]可用來檢查測試覆蓋率，也就是幫忙看看我們的程式被測試的情況。
+  範例設定如下：
+  {{{
+<project>
+  ...
+  <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.6.2.201302030002</version>
+                <executions>
+                    <execution><!--不可少的基本設定-->
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id><!--測試後打包前產生報表-->
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+  ...
+  }}}
 
+  當執行mvn package時，會順便產生報表在 target/site/jacoco/index.html(或是執行 mvn test jacoco:report 測試並產生報表)
+  
 = WEB靜態資源最佳化 =
   最近想到寫個plugin把要使用的JavaScript用[http://code.google.com/p/closure-compiler/ Google Closure]加壓後再打包，寫了寫才發現原來已經有人
   早就想到了，[http://code.google.com/p/wro4j wro4j]認為在HTTP下載一個大檔案的效率，遠比下載兩個分割檔案，所以[http://code.google.com/p/wro4j wro4j]
