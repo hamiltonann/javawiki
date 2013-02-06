@@ -990,6 +990,8 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
                   <minimize>true</minimize>
                   <contextFolder>${basedir}/src/main/webapp/</contextFolder>
                   <destinationFolder>${basedir}/src/main/webapp/wro/</destinationFolder>
+                  <!--使用Google Closure Compile處理JavaScript-->
+                  <wroManagerFactory>ro.isdc.wro.extensions.manager.standalone.GoogleStandaloneManagerFactory</wroManagerFactory>
               </configuration>
             </plugin>
   }}}
