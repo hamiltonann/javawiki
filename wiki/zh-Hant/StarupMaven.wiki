@@ -807,7 +807,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
 == 軟體品質保證 ==
   也許專案從開始到發佈，經歷編譯與測試都沒有錯，但是專案源碼，可能是資深與資淺人員一同撰寫而成的，難道他們所撰寫的源碼都保持一致的品質嗎?
-  這也許是個問題，所以我要介紹兩個檢測工具，[http://pmd.sourceforge.net PMD]、[http://findbugs.sourceforge.net FindBugs] 與 [http://www.eclemma.org/jacoco/trunk/doc/maven.html JaCoCo].
+  這也許是個問題，所以我要介紹三個檢測工具，[http://pmd.sourceforge.net PMD]、[http://findbugs.sourceforge.net FindBugs] 與 [http://www.eclemma.org/jacoco/trunk/doc/maven.html JaCoCo].
 
 === PMD ===
   [http://pmd.sourceforge.net PMD]是針對源碼進行可能的檢測，我們要在Maven內使用其功能，就必須導入[http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin].
