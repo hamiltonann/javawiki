@@ -670,6 +670,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 === 最新版本檢查 ===
 有時後在程式發佈前，想看看是否有更新的版本存在，可以執行
   "mvn versions:display-dependency-updates" 檢查使用的函式庫有那些更新的版本
+  
   "mvn versions:display-plugin-updates" 檢查使用的Plugin有那些更新的版本
      
 == Profile ==
