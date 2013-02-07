@@ -973,8 +973,8 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   範例設定如下：
   {{{
 <project>
-  ...
-  <reporting>
+    ...
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -996,7 +996,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
                     </execution>
                 </executions>
             </plugin>
-  ...
+          ...
   }}}
 
   當執行mvn package時，會順便產生報表在 target/site/jacoco/index.html(或是執行 mvn test jacoco:report 測試並產生報表)
