@@ -1057,8 +1057,8 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 ||以file:開頭如file:c:\js\**.css||表示javaScript或是css存在於檔案系統內||
 ||外部url||例如http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js||
   路徑也可包含萬用字元
-||`*`||單一路徑元素，如*.css表示該路徑內(不含子路徑)的所有css檔案||
-||`**`||多重路徑元素，如c:\js\**.css表示c:\js\下(含子路徑)所有的css檔案||
+||`*`||單一路徑元素，如`*.css`表示該路徑內(不含子路徑)的所有css檔案||
+||`**`||多重路徑元素，如`c:\js\**.css`表示c:\js\下(含子路徑)所有的css檔案||
 ||?||表示任何單一字視，如/usr/javaScript/mobile?.css，可能為 mobile1.css或是mobileA.css...||
   最後則是引用
   {{{
