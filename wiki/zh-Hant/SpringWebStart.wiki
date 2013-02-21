@@ -12,12 +12,12 @@
 其它的部分，我則認為應該保留。
 
 = 建立專案 =
-最快的方法當然是從命令列開始：
+最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.3a，但也因此SprintSecurity會使用3.2.0M1版本)
 {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
--DarchetypeVersion=0.1.2
+-DarchetypeVersion=0.1.3
 }}}
 然後回達一些問題
 {{{
@@ -253,7 +253,10 @@ Spring Security的中文化的訊息。<br/>
 進行整合測試，若是您要採用Tomcat進行測試，請打開pom.xml，
   # 把｀<build`>內的 jetty-maven-plugin 段落移除
   # 把｀<build`>內的 tomcat7-maven-plugin 段落內的`<executions`>啟用，然後把`<fork`>設為True(因為Tomcat7若不採用另一個JDK執行，測試後將無法正常關閉)
-整合測試完成後，最後報表會產出在target/failsafe-reports/index.html
+整合測試完成後，最後報表會產出在target/failsafe-reports/index.html.
+註：
+  #在執行jetty或是tomcat時，請先執行 mvn wro4j:run，因為網頁會參考合併的css與javascrip，而合併的動作我放在pre-package階段，所以只能手動自行合併產生
+  #與其僅僅是執行mvn integration-test，還不如直接執行 mvn verify，因為verify就包含了整合測試
 == 軟體品質檢測 ==
 若您是使用
 {{{
