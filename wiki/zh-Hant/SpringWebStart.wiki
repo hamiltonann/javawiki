@@ -238,8 +238,7 @@ Spring Security的中文化的訊息。<br/>
   # Maven由[http://maven.apache.org/plugins/maven-surefire-plugin/ maven-surefire-plugin]幫助進行單元測試，若是pom.xml內沒有特別設定，則[http://maven.apache.org/plugins/maven-surefire-plugin/test-mojo.html#includes 預設]以Test開頭、結尾或是以TestCase結尾的Java檔作為測試標的。
   # 測試程式若是需要載入Spring Context環境，則可以繼承[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/testng/AbstractTestNGSpringContextTests.html AbstractTestNGSpringContextTests]([http://testng.org testNG])、[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit4/AbstractJUnit4SpringContextTests.html AbstractJUnit4SpringContextTests](Junit4)或是[http://static.springsource.org/spring/docs/current/javadoc-api/org/springframework/test/context/junit38/AbstractJUnit38SpringContextTests.html AbstractJUnit38SpringContextTests](Junit 3.8)
   # 一般性的功能測試請inject相關的Bean進來測試就行了，測試Spring Web的功能，請參考測試程式TestDefaultController.java，最終的測試報告請查看 target/surefire-reports/index.html。
-<b>注意事項</b>：pom.xml內`<reporting`>下有一個cobertura-maven-plugin，產生檢測測試涵蓋率(良葛格有[http://caterpillar.onlyfun.net/Gossip/JUnit/Cobertura.html 介紹])報表，
-因為不支援JDK7，若您使用JDK7，請將該plugin段落移除。
+<b>注意事項</b>：Spring 3.2採用了fluent的測試方法，使用方式請參考[http://www.javaworld.com.tw/jute/post/view?bid=42&id=311959&sty=0 這裡]。
 == 整合測試 ==
 這裡要說明的是整合測試實際上會把Web上起來實測，所以請注意http與https的Port是否有被其它程式佔用，
 範例程式採用Jetty進行測試，您也可以以下列命令直接將WEB程式上起來。
