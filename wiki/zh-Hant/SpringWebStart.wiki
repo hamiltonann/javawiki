@@ -254,8 +254,8 @@ Spring Security的中文化的訊息。<br/>
   # 把｀<build`>內的 tomcat7-maven-plugin 段落內的`<executions`>啟用，然後把`<fork`>設為True(因為Tomcat7若不採用另一個JDK執行，測試後將無法正常關閉)
 整合測試完成後，最後報表會產出在target/failsafe-reports/index.html.
 註：
-  #在執行jetty或是tomcat時，請先執行 mvn wro4j:run，因為網頁會參考合併的css與javascrip，而合併的動作我放在pre-package階段，所以只能手動自行合併產生
-  #與其僅僅是執行mvn integration-test，還不如直接執行 mvn verify，因為verify就包含了整合測試
+  # 在執行jetty或是tomcat時，請先執行 mvn wro4j:run，因為網頁會參考合併的css與javascrip，而合併的動作我放在pre-package階段，所以只能手動自行合併產生
+  # 與其僅僅是執行mvn integration-test，還不如直接執行 mvn verify，因為verify就包含了整合測試
 == 軟體品質檢測 ==
 若您是使用
 {{{
