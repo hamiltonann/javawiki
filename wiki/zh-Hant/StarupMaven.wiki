@@ -176,7 +176,7 @@ plugin的定義結構通常如下
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId><!--若是此值，則可省略-->
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.1</version>
 				<configuration>
 				...各種設定
 				</configuration>
@@ -195,7 +195,7 @@ plugin的定義結構通常如下
 我們建立的第一個 Project 的 [#Maven_%E7%9A%84Project%E7%AE%A1%E7%90%86 pom.xml]檔案內有一個`<properties`>段落，可以讓我們定義一些變數，
 例如Spring 通常含有多種Library，其引用版本應該一致，所以我通常會定義一個變數
 {{{
-<org.springframework.version>3.1.1.RELEASE</org.springframework.version>
+<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
 }}}
 然後，定義版本別的地方會寫成
 {{{
@@ -273,7 +273,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>3.1</version>
 				<configuration>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
@@ -298,7 +298,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.12.4</version>
+				<version>2.16</version>
 				<configuration>
 					<suiteXmlFiles>
 						<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
@@ -370,7 +370,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.3</version>
+				<version>2.4</version>
 				<configuration>
 					<archive>
 						<manifest>
@@ -459,7 +459,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.0</version>
+				<version>2.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -498,7 +498,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 			<plugin>
 			  <groupId>org.apache.maven.plugins</groupId>
 			  <artifactId>maven-surefire-plugin</artifactId><!--因為是測試時發生，所以設定這個Plugin-->
-			  <version>2.12.4</version>
+			  <version>2.16</version>
 			  <configuration>
 			    <systemProperties>
 			      <property>
@@ -541,7 +541,7 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-plugin</artifactId>
-        <version>1.8</version>
+        <version>1.8.1</version>
         <!-- Checkout之後要執行的Goal -->
         <configuration>
           <goals>package</goals><!--給scm:bootstrap goal使用，checkout後立即執行 package goal-->
@@ -807,7 +807,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 
 == 軟體品質保證 ==
   也許專案從開始到發佈，經歷編譯與測試都沒有錯，但是專案源碼，可能是資深與資淺人員一同撰寫而成的，難道他們所撰寫的源碼都保持一致的品質嗎?
-  這也許是個問題，所以我要介紹四個檢測工具，[http://pmd.sourceforge.net PMD]、[http://findbugs.sourceforge.net FindBugs]、[http://checkstyle.sourceforge.net/ Checkstyle] 與 [http://www.eclemma.org/jacoco/trunk/doc/maven.html JaCoCo].
+  這也許是個問題，所以我要介紹五個檢測工具，[http://pmd.sourceforge.net PMD]、[http://findbugs.sourceforge.net FindBugs]、[http://checkstyle.sourceforge.net/ Checkstyle]、[http://cobertura.github.io/cobertura/ Cobertura] 與 [http://www.eclemma.org/jacoco/trunk/doc/maven.html JaCoCo].
 
 === PMD ===
   [http://pmd.sourceforge.net PMD]是針對源碼進行可能的檢測，我們要在Maven內使用其功能，就必須導入[http://maven.apache.org/plugins/maven-pmd-plugin/ maven-pmd-plugin].
@@ -817,67 +817,12 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   其中只有兩個Goals是我有興趣的，
 ||[http://maven.apache.org/plugins/maven-pmd-plugin/check-mojo.html pmd:check]||檢查源碼內可能違反PMD預設的規則||
 ||[http://maven.apache.org/plugins/maven-pmd-plugin/cpd-check-mojo.html pmd:cpd-check]||檢查源碼內重覆的部分||
-
-  如果要在源碼檢測完成後，以報表方式查看檢測結果，我們首先要在pom.xml內放置`<reporting`>段落
-  {{{
-<project>
-  ...
-  <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.7.1</version> 
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>UTF-8</sourceEncoding><!--源碼所使用的字元編碼-->
-                    <minimumTokens>100</minimumTokens><!--至少多少個token重覆才會被視為源碼重覆-->
-                    <targetJdk>1.6</targetJdk><!--編譯程式所用的JDK版本-->
-                    <verbose>true</verbose><!--檢查過程輸出資訊-->
-                </configuration>
-            </plugin>
-        </plugins>
-  </reporting>
-<project>
-  }}}
-  此時，我們可以用 mvn site產生報表，同時把源碼檢測的報表一併產生。<br/>
-  很不幸地，pmd預設的`<targetJdk`>是1.4，如果您的源碼內含有annotation或是generic，那麼您即使用`<reporting`>把
-  `<targetJdk`>改為1.5以上是沒有用的，PMD仍然會告訴您annotation或是generic不符合JDK 1.4的規範。
-  所以解決的辦法是我們必須把上面那一段，同樣放一分到`<build`>`<plugins`>內，才能解決這個問題。
-  {{{    
-<project>
-  ...    
-  <build>
-    <plugins>        
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-pmd-plugin</artifactId>
-            <version>2.7.1</version>  
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>check</goal>
-                        <goal>cpd-check</goal>
-                    </goals>
-                </execution>
-            </executions>   
-            <configuration>
-                <linkXref>true</linkXref>
-                <sourceEncoding>UTF-8</sourceEncoding><!--源碼所使用的字元編碼-->
-                <minimumTokens>100</minimumTokens><!--至少多少個token重覆才會被視為源碼重覆-->
-                <targetJdk>1.6</targetJdk><!--編譯程式所用的JDK版本-->
-                <verbose>true</verbose><!--檢查過程輸出資訊-->
-            </configuration>
-        </plugin>
-    </plugins>
-  </build>     
-<project>
-  }}}
-  好了，現在除了使用 mvn site產生報表外，還可能使用 mvn pmd:check 進行檢測或是用 mvn pmd:cpd-check檢測重覆的源碼了.<br/>
+  
+  好了，現在可以使用  mvn pmd:check 進行檢測或是用 mvn pmd:cpd-check檢測重覆的源碼了.<br/>
   或者以 mvn verify 在最後完成階段再進行兩個Goals的檢測。<br/>
   也許有人會問，因為PDM是直接檢查源碼，那個我是否可以在compile時順便檢查(在`<executions`>置入`<phase`>compile`</phase`>)，
   當然可以，不過我之前也說了，PMD檢測出問題點不代表源碼無法通選測試與發佈，若在compile階段檢源碼的品質，有可能會因為不符合
-  PMD的檢測而導致後面的步驟(如test,package)做不下去，這也是何要單獨執行goal或是在 verfiy階段才來作檢測的原因
+  PMD的檢測而導致後面的步驟(如test,package)做不下去(除非加入設定`<failOnViolation`>false`</failOnViolation`>)，這也是何要單獨執行goal或是在 verfiy階段才來作檢測的原因
 
 === FindBugs ===
   [http://findbugs.sourceforge.net FindBugs]檢測的標的不是源碼，而是binary code.(所以一定要先打包好專案)<br/>
@@ -967,7 +912,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 ||config/avalon_checks.xml||Avalon定義開發風格||
 
   設定完成之後就可使用指令 mvn checkstyle:checkstyle 或是 mvn site 產生檢查後的報表
-  
+
 === JaCoCo ===
   [http://www.eclemma.org/jacoco/trunk/index.html JaCoCo]可用來檢查測試覆蓋率，也就是幫忙看看我們的程式被測試的情況。
   範例設定如下：
@@ -979,7 +924,7 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.6.2.201302030002</version>
+                <version>0.6.3.201306030806</version>
                 <executions>
                     <execution><!--不可少的基本設定-->
                         <id>jacoco-initialize</id>
@@ -1000,7 +945,38 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
   }}}
 
   當執行mvn package時，會順便產生報表在 target/site/jacoco/index.html(或是執行 mvn test jacoco:report 測試並產生報表)
-  
+
+=== Cobertura ===
+  [http://cobertura.github.io/cobertura/ Cobertura]也是一款用來檢查測試覆蓋率，是最早也是最多人
+  提到的工具，我覺得其產出的報表呈現方式比[http://www.eclemma.org/jacoco/trunk/index.html JaCoCo]要好。
+  缺點是在Java7時無法順利執行(已經有解)。
+  {{{
+<project>
+    ...
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <goals>
+                            <goal>cobertura</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- JDK7版本要加入以下設定-->
+                <!--configuration>
+                    <argLine>-XX:-UseSplitVerifier</argLine>
+                </configuration-->
+            </plugin>
+           ...
+  }}}
+  現在我們可以用指令 mvn cobertura:cobertura 來產生報表，這個指令必然引發程式進行test，為啥?因為它不就是在檢查"測試"覆蓋率，它必須由測試中產生一些額外的資訊。
+  上述的設定，我設定了在pre-site這個階段時，要去執行cobertura這個goal，主要的原因是mvn site產生整合報表時，只會加入之前產生的
+  cobertura報表，而不會再次執行測試而產生報表，所以我要在執行site前去執行它。
 = WEB靜態資源最佳化 =
   最近想到寫個plugin把要使用的JavaScript用[http://code.google.com/p/closure-compiler/ Google Closure]加壓後再打包，寫了寫才發現原來已經有人
   早就想到了，[http://code.google.com/p/wro4j wro4j]認為在HTTP下載一個大檔案的效率，遠比下載兩個分割檔案，所以[http://code.google.com/p/wro4j wro4j]
@@ -1086,3 +1062,162 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 而每次重新產生的時間都有點久，所以我建議改成pre-package階段再產生，
 但是執行mvn jetty:run時卻又要參考到，這時請手動執行
 mvn wro4j:run 產生即可，若是有變動的話，再執行一次重新產生即可。
+
+= Site Report =
+  顧名思義，就是用產生整個專案的報表，上面我設定了很多`<reporting`>的tag，用來設定產生報表的相關設定。<br/>
+  實際上，mvn site在site階段執行的是mvn site:site這個goal，而這個plugin就是[http://maven.apache.org/plugins/maven-site-plugin/ maven-site-plugin]，
+  因為這個plugin的設定比較煩，所以`<reporting`>的目的就是為了簡化這個plugin的設定而出現的。如果您仔細看過maven執行的訊息，會發現使用`<reporting`>
+  這個tag時，maven一直出現`<reporting`>已經過時的訊息，也是就maven要您最好直接設定maven-site-plugin, 而不要再使用`<reporting`>了。
+  
+  以下是我通常用的設定方式
+  {{{
+<project>
+    ...
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.3</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>1.4</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <!--Uncomment if jdk 7+-->
+                    <!--argLine>-XX:-UseSplitVerifier</argLine-->
+                    <locales>zh_TW</locales>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <version>2.7</version>
+                            <configuration>
+                                <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
+                            </configuration>
+                            <reportSets>
+                                <reportSet>
+                                    <reports><!--專案報表所要產生的項目-->
+                                        <report>index</report>
+                                        <report>plugin-management</report><!--專案外掛程式管理 (Project Plugin Management)-->
+                                        <!--report>distribution-management</report>  發佈管理-->
+                                        <!--report>scm</report> 原始碼貯藏庫 (Source Repository)-->
+                                        <!--report>mailing-list</report>  專案郵件列表 (Project Mailing Lists)-->
+                                        <!--report>issue-tracking</report> 問題追蹤 (Issue Tracking)-->
+                                        <!--report>cim</report>  持續整合 (Continuous Integration)-->
+                                        <report>plugins</report><!--專案建構外掛程式 (Project Build Plugins)-->
+                                        <report>license</report><!--專案授權許可 (Project License)-->
+                                        <report>project-team</report><!--團隊 (The Team)-->
+                                        <report>summary</report><!--專案摘要 (Project Summary)-->
+                                        <report>dependencies</report> <!--專案依賴 (Project Dependencies)-->
+                                        <report>dependency-management</report>
+                                        <report>modules</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <version>2.9.1</version>
+                            <configuration>
+                                <aggregate>true</aggregate>
+                                <minmemory>128m</minmemory>
+                                <maxmemory>512</maxmemory>
+                                <breakiterator>true</breakiterator>
+                                <failOnError>false</failOnError>
+                                <quiet>true</quiet>
+                                <source>${maven.compiler.source}</source>
+                                <verbose>false</verbose>
+                                <linksource>true</linksource>
+                                <links>
+                                    <link>http://download.oracle.com/javase/7/docs/api/</link>
+                                    <link>http://download.oracle.com/javaee/7/api/</link>
+                                    <link>http://static.springsource.org/spring/docs/current/javadoc-api/</link>
+                                    <link>http://static.springsource.org/spring-security/site/docs/current/apidocs/</link>
+                                    <link>http://static.springframework.org/spring-mobile/docs/current/api</link>
+                                    <link>http://docs.jboss.org/hibernate/stable/core/javadocs/</link>
+                                    <link>http://www.slf4j.org/api/</link>
+                                </links>
+                            </configuration>
+                            <reportSets>
+                                <reportSet>
+                                    <id>javadoc</id>
+                                    <reports>
+                                        <report>javadoc</report>
+                                        <!--report>test-javadoc</report-->
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jxr-plugin</artifactId>
+                            <version>2.3</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-pmd-plugin</artifactId>
+                            <version>3.0.1</version>
+                            <configuration>
+                                <failOnViolation>false</failOnViolation>
+                                <linkXref>true</linkXref>
+                                <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+                                <minimumTokens>100</minimumTokens><!--minimun token duplicated think as source duplicated-->
+                                <targetJdk>${maven.compiler.target}</targetJdk>
+                                <verbose>true</verbose>
+                            </configuration> 
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>findbugs-maven-plugin</artifactId>
+                            <version>2.5.2</version>
+                            <configuration>
+                                <failOnError>false</failOnError>
+                                <xmlOutputDirectory>${project.build.directory}/site</xmlOutputDirectory>
+                                <effort>Max</effort><!--Detect Level:Min,Default or Max-->
+                                <xmlOutput>true</xmlOutput>
+                                <fork>${findbugs.fork}</fork>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-report-plugin</artifactId>
+                            <version>2.13</version>
+                            <reportSets>
+                                <reportSet>
+                                    <id>integration-tests</id>
+                                    <reports>
+                                        <!--Alternatives ，二選一
+                                            report: invoke test ，會引發測試
+                                            report-only: invoke test ，不會引發測試，但是之前必須經過測試
+                                        -->
+                                        <!--<report>report</report>--> 
+                                        <report>report-only</report>
+                                        <report>failsafe-report-only</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>cobertura-maven-plugin</artifactId>
+                            <version>2.5.2</version>
+                        </plugin>
+                    </reportPlugins>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+  }}}
+  上述的設定需要在專案中包含一些報表文件模版，建議您使用以下指定產生一個示範專案(Spring)，然後參考site目錄下的模版範例
+  {{{{{{
+mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
+-DarchetypeGroupId=com.google.code \
+-DarchetypeArtifactId=SpringWebStart \
+-DarchetypeVersion=0.1.5
+}}}
+  }}}
