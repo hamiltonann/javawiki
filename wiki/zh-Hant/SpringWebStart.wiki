@@ -12,7 +12,7 @@
 其它的部分，我則認為應該保留。
 
 = 建立專案 =
-最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.5<span style="color:red;font-weight:bold">a</span>，但也因此SprintSecurity會使用3.2.0M1版本)
+最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.5*a*，但也因此SprintSecurity會使用3.2.0M1版本)
 {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
