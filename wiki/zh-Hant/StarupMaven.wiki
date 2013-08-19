@@ -1067,7 +1067,8 @@ mvn wro4j:run 產生即可，若是有變動的話，再執行一次重新產生
   顧名思義，就是用產生整個專案的報表，上面我設定了很多`<reporting`>的tag，用來設定產生報表的相關設定。<br/>
   實際上，mvn site在site階段執行的是mvn site:site這個goal，而這個plugin就是[http://maven.apache.org/plugins/maven-site-plugin/ maven-site-plugin]，
   因為這個plugin的設定比較煩，所以`<reporting`>的目的就是為了簡化這個plugin的設定而出現的。如果您仔細看過maven執行的訊息，會發現使用`<reporting`>
-  這個tag時，maven一直出現`<reporting`>已經過時的訊息，也是就maven要您最好直接設定maven-site-plugin, 而不要再使用`<reporting`>了。
+  這個tag時，maven一直出現`<reporting`>已經過時的訊息，也是就maven要您最好直接設定maven-site-plugin, 而不要再使用`<reporting`>了。<br/>
+  (mvn site與mvn site:site有何不同?mvn site:site只是執行plugin的單一goal,而mvn site所執行的是整個LifeCycle(會執行每個phase相關的goals，千萬不要搞錯了))
   
   以下是我通常用的設定方式
   {{{
@@ -1214,7 +1215,7 @@ mvn wro4j:run 產生即可，若是有變動的話，再執行一次重新產生
 </project>
   }}}
   上述的設定需要在專案中包含一些報表文件模版，建議您使用以下指定產生一個示範專案(Spring)，然後參考site目錄下的模版範例
-  {{{{{{
+  {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
