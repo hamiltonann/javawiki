@@ -12,12 +12,12 @@
 其它的部分，我則認為應該保留。
 
 = 建立專案 =
-最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.4a，但也因此SprintSecurity會使用3.2.0M1版本)
+最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.5<span style="color:red;font-weight:bold">a</span>，但也因此SprintSecurity會使用3.2.0M1版本)
 {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
--DarchetypeVersion=0.1.4
+-DarchetypeVersion=0.1.5
 }}}
 然後回達一些問題
 {{{
@@ -265,14 +265,17 @@ Spring Security的中文化的訊息。<br/>
 也就是說使用 <b>mvn site</b> 產生報表時會再執行一次，因為PMD查出問題時，並不代表程式一定有錯，也許是多個“；”號或是多import 了一個沒有用到的Class，
 但是卻會造成verify報錯，或許您可以考慮把`<build`>內的maven-pmd-plugin移除。
 
+<wiki:comment>
 或許您也會奇怪，為何`<build`>與`<reporting`>為何設定了一些同樣的plugin?
   # 首先是因為Maven無法將`<build`>與`<reporting`>統一管理(您或許看過，有一些`<xxxManagement `>, 那是就來多模組時作為集中管理的tag)
   # 另外是考慮到，您可能單獨執行某些命令，如 <b>mvn findbugs:check</b> 或是 <b>mvn javadoc:javadoc</b> ，那麼就只能設定在`<build`>內，與`<reporting`>產生報表的設定無關。
+</wiki:comment>
+
 = 以IDE建立專案 =
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上Version:處請輸入最新版本0.1.4或是0.1.4a</div>
+     以上Version:處請輸入最新版本0.1.5或是0.1.5a</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
 == Eclipse ==
