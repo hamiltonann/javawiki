@@ -12,12 +12,12 @@
 其它的部分，我則認為應該保留。
 
 = 建立專案 =
-最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列版本改為0.1.5<font color="red" size="4pt">a</font>，但也因此SprintSecurity會使用3.2.0M2版本)
+最快的方法當然是從命令列開始(以下為建立Servelet 2.5程式，若要建立3.0 Async程式，請將下列的SpringWebStart改成<font color="red" size="4pt">SpringAsyncWebStart</font>)
 {{{
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
--DarchetypeVersion=0.1.5
+-DarchetypeVersion=0.1.6
 }}}
 然後回達一些問題
 {{{
@@ -37,7 +37,9 @@ MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
 {{{
 mvn verify
 }}}
-就可以看到整個專案從compile到整合測試(含軟體檢測)的所有階段,最後執行(JDK7朋友請看一下[#%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6 單元測試]的注意事項)
+就可以看到整個專案從compile到整合測試(含軟體檢測)的所有階段,一般來說我建議執行到package phase就可以了，
+整合測試執行selenium我覺的有時不是那麼順，最好直接用mvn jetty:run 或mvn tomcat7:run再用Firefox瀏覽器去執行selenium，
+,最後執行(JDK7朋友請看一下[#%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6 單元測試]的注意事項)
 {{{
 mvn site
 }}}
@@ -275,7 +277,7 @@ Spring Security的中文化的訊息。<br/>
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上Version:處請輸入最新版本0.1.5或是0.1.5a</div>
+     以上Artifact ID:處請輸入SpringWebStart或SpringAsyncWebStart，Version:處請輸入最新版本0.1.6</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
 == Eclipse ==
@@ -283,7 +285,7 @@ Spring Security的中文化的訊息。<br/>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche2.png" alt="選擇專案位置" title="選擇專案位置"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche3.png" alt="加入Archetype" title="加入Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche4.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.4或是0.1.4a</div>
+     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.6</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche5.png" alt="選擇Archetype" title="選擇Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche6.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
