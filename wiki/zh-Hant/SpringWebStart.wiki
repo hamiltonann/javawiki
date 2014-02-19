@@ -277,7 +277,7 @@ Spring Security的中文化的訊息。<br/>
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上Artifact ID:處請輸入SpringWebStart或SpringAsyncWebStart，Version:處請輸入最新版本0.1.6</div>
+     以上Artifact ID:處請輸入SpringWebStart或SpringAsyncWebStart，Version:處請輸入最新版本0.1.7</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
 == Eclipse ==
@@ -285,7 +285,7 @@ Spring Security的中文化的訊息。<br/>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche2.png" alt="選擇專案位置" title="選擇專案位置"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche3.png" alt="加入Archetype" title="加入Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche4.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.6</div>
+     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.7</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche5.png" alt="選擇Archetype" title="選擇Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche6.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
