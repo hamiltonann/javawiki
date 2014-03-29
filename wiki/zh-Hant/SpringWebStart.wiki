@@ -17,7 +17,7 @@
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
--DarchetypeVersion=0.1.8
+-DarchetypeVersion=0.1.9
 }}}
 然後回達一些問題
 {{{
@@ -37,9 +37,9 @@ MAVEN_OPTS='-Xms512m -Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m'
 {{{
 mvn verify
 }}}
-就可以看到整個專案從compile到整合測試(含軟體檢測)的所有階段,一般來說我建議執行到package phase就可以了，
-整合測試執行selenium我覺的有時不是那麼順，最好直接用mvn jetty:run 或mvn tomcat7:run再用Firefox瀏覽器去執行selenium，
-,最後執行(JDK7朋友請看一下[#%E5%96%AE%E5%85%83%E6%B8%AC%E8%A9%A6 單元測試]的注意事項)
+就可以看到整個專案從compile到整合測試(含軟體檢測)的所有階段,整合測試包含了兩個不同的測試方式，一種是
+單純使用[http://htmlunit.sourceforge.net/ HtmlUnit](速度最快)，另外一種則是使用[http://docs.seleniumhq.org/projects/webdriver/ webdriver]
+(可驅動瀏覽器執行整合測試)
 {{{
 mvn site
 }}}
@@ -172,6 +172,18 @@ SSL登錄的資訊完全遺失，為了上述所說SSL登錄所產生的Session�
 通常一個企業內不時會新增一些系統，所以我另外寫了一個[http://code.google.com/p/oisso/ OpenID半成品]的專案，
 並依我所服務的公司的狀況改寫並應用。如果您不需要，可將範例程式看到OpenId名稱的檔案全數移除。
 
+== CSRF 防護 ==
+S.S 3.2版後加入了 CSRF 防護(見applicationContext-security.xml)，這個功能的加入，導致了一些變化。
+  * 首先、再也無法直接超連結到 j_spring_security_logout 進行登出，必須改用 form post 的方式(參考index.jsp)
+  * 其次、ajax post也必須加入特定的 header(參考index.jsp)
+  * 最後、form post 必須加入特定的hidden input(參考login.jsp)
+== Header 參數 ==
+S.S 3.2版後也加入了一些Http header 以讓瀏覽器知道該作些什麼，簡略說明如下。
+  * cache-control:告訴瀏覽器不要快取網頁，以避免在歷史中(用回上頁的方式)，看到授權頁的相關資訊
+  * content-type-options: 看一下微軟的[http://msdn.microsoft.com/zh-tw/library/ie/gg622941%28v=vs.85%29.aspx 說明]
+  * frame-options: 避免其它網站把我的網頁，用Frame的方式包入它們的網頁中
+  * hsts: 用戶在網址列，登打時，若沒有輸入 http:// 開頭，則一律視為 https:// 連線
+  * xss-protection: 避免載入跨網站腳本，網路查一下，有很多資訊
 == Ajax安全性 ==
 當存取的網址須登錄或是沒有存取權限時，S.S會把網頁導到登錄頁或是錯誤頁，但顯然在Ajax這是行不通的。<br/>
 所以有預設放了一支程式AjaxAwareLoginUrlAuthenticationEntryPoint.java針對明確是使用Ajax進入或是路徑包含了/json的網址視為Ajax存取，直接回應錯誤，
@@ -255,6 +267,7 @@ Spring Security的中文化的訊息。<br/>
   # 把｀<build`>內的 jetty-maven-plugin 段落移除
   # 把｀<build`>內的 tomcat7-maven-plugin 段落內的`<executions`>啟用，然後把`<fork`>設為True(因為Tomcat7若不採用另一個JDK執行，測試後將無法正常關閉)
 整合測試完成後，最後報表會產出在target/failsafe-reports/index.html.
+
 註：
   # 在執行jetty或是tomcat時，請先執行 mvn wro4j:run，因為網頁會參考合併的css與javascrip，而合併的動作我放在pre-package階段，所以只能手動自行合併產生
   # 與其僅僅是執行mvn integration-test，還不如直接執行 mvn verify，因為verify就包含了整合測試
@@ -277,7 +290,7 @@ Spring Security的中文化的訊息。<br/>
 == Net Beans ==
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch1.png" alt="開啟新專案" title="開啟新專案"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch2.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上Artifact ID:處請輸入SpringWebStart或SpringAsyncWebStart，Version:處請輸入最新版本0.1.8</div>
+     以上Artifact ID:處請輸入SpringWebStart或SpringAsyncWebStart，Version:處請輸入最新版本0.1.9</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarch3.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
 == Eclipse ==
@@ -285,7 +298,7 @@ Spring Security的中文化的訊息。<br/>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche2.png" alt="選擇專案位置" title="選擇專案位置"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche3.png" alt="加入Archetype" title="加入Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche4.png" alt="填入Archetype資訊" title="填入Archetype資訊"/><br/>
-     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.8</div>
+     以上GoupId請改成com.google.code而Version:處請輸入最新版本0.1.9</div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche5.png" alt="選擇Archetype" title="選擇Archetype"/></div>
 <div><img src="http://javawiki.googlecode.com/svn/images/mavenarche6.png" alt="填入專案資訊" title="填入專案資訊"/></div>
 然後建立專案
