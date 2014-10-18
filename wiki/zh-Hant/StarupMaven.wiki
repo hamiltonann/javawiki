@@ -54,44 +54,44 @@ Maven的管理設定主要靠Pom.xml進行，打開剛才建立的Project設定�
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
-	
-	<!--本Project識別-->
-	<groupId>idv.kentyeh.software</groupId>
-	<artifactId>firstmaven</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	
-	<packaging>jar</packaging>  <!--表示打包Project的型態,可能為Jar、war、ear或pom，若是使用了android 則為apk-->
-	
-	<!--以下是給工具看的,主要是本Project的資訊-->
-	<name>第一個MavenProject</name>
-	<url>http://sites.google.com/site/gwtmemo</url>
-	
-	<!--設定一些變數-->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-	
-	<!--設定引用函式庫-->
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
+    <modelVersion>4.0.0</modelVersion>
+    
+    <!--本Project識別-->
+    <groupId>idv.kentyeh.software</groupId>
+    <artifactId>firstmaven</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    
+    <packaging>jar</packaging>  <!--表示打包Project的型態,可能為Jar、war、ear或pom，若是使用了android 則為apk-->
+    
+    <!--以下是給工具看的,主要是本Project的資訊-->
+    <name>第一個MavenProject</name>
+    <url>http://sites.google.com/site/gwtmemo</url>
+    
+    <!--設定一些變數-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    
+    <!--設定引用函式庫-->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    
 </project>
 }}}
 
 首先要說明的是dependencies段落，比如說，Project內會用到 commons-loggin 的Library，我們可以在此加入新的dependency段落，
 {{{
-	<dependency>
-		<groupId>commons-logging</groupId>
-		<artifactId>commons-logging</artifactId>
-		<version>1.1.1</version>
-	</dependency>
+    <dependency>
+        <groupId>commons-logging</groupId>
+        <artifactId>commons-logging</artifactId>
+        <version>1.1.1</version>
+    </dependency>
 }}}
 不知道commons-loggin的識別資料?沒關係，到[http://search.maven.org/ 這裡]查。至於scope可以不填，表示打包Project(如war,ear…)時，
 引用的Library會一起被打包，Scope的值說明如下：
@@ -143,11 +143,11 @@ Project目錄
 以下為可能會用到的來源(加入到Pom.xml)：
 {{{
 <repositories>
-	<repository><!--J2ee 最新的函式庫在此-->
-		<id>java.net2</id>
-		<name>Repository hosting the jee6 artifacts</name>
-		<url>http://download.java.net/maven/2</url>
-	</repository>
+    <repository><!--J2ee 最新的函式庫在此-->
+        <id>java.net2</id>
+        <name>Repository hosting the jee6 artifacts</name>
+        <url>http://download.java.net/maven/2</url>
+    </repository>
 </repositories>
 }}}
 
@@ -164,28 +164,39 @@ Maven 的指令可以串接，例如以下指令
 {{{
 mvn clean package javadoc:javadoc exec:exec
 }}}
-表示，先刪除 target 目錄後再行打包Project，然後產生文件，再執行Project(需要額外設定)
+表示，先刪除 target 目錄後再行打包Project，然後產生文件，再執行專案(需要額外設定)。
+
+上述的 clean、package(打包）都很容易理解，可是為何又出現了 javadoc:javadoc、exec:exec 這樣的表示，
+這是因為Plugin是Maven裡面的一種特殊專案，她裡面存在一些task，當這些Plugin被包含進專案的pom.xml時，
+例如要執行maven-javadoc-plugin這個Plugin的javadoc task時，完整的命令下法應該是
+{{{
+mvn org.apache.maven.plugins:maven-javadoc-plugin:2.10.1:javadoc
+}}}
+但是因為在的Jar的Metadata中已經標注了它的prefix，在Maven執行時，會去讀取每個plugin java的metadata，
+而maven-javadoc-plugin的metadata標記為javadoc，所以才省略為 javadoc:javadoc，<br/>
+至於前面的clean package 等則是[#Maven_pahse maven lifecycle]的一部分，會綁定特定的Plugin，然後執行
+該Plugin的task。
 
 plugin的定義結構通常如下
 {{{
 <project ...>
-	...
-	<build>
-		<plugins>
-			<!--可定義多個plugin-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId><!--若是此值，則可省略-->
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-				...各種設定
-				</configuration>
-			</plugin>
-		<plugins>
-		<finalName>firstmvn</finalName>
-		...
-	<build>
-	...
+    ...
+    <build>
+        <plugins>
+            <!--可定義多個plugin-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><!--若是此值，則可省略-->
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                ...各種設定
+                </configuration>
+            </plugin>
+        <plugins>
+        <finalName>firstmvn</finalName>
+        ...
+    <build>
+    ...
 </project>
 }}}
 
@@ -265,23 +276,23 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 
 == 常用的plugin build設定 ==
 
-=== Compile的設定	===
+=== Compile的設定    ===
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 您會發現，其實這段省略也沒有關係，因為Maven[http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Built-in_Lifecycle_Bindings 內定]的compile，就是依靠這個[http://maven.apache.org/plugins/maven-compiler-plugin plugin]來作業，
@@ -293,21 +304,21 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 因為我不用JUnit，所以我會設定TestNG
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.16</version>
-				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
-					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
-				</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.16</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${basedir}/src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+                </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 
@@ -317,23 +328,23 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 像GWT用於Client Side Code的Liberary，明確要求要把源碼包入jar檔內，所以要把Source Code與gwt.xml一起包到jar檔內
 {{{
 <project ...>
-	<build>
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/java</directory><!--資源檔存放路徑-->
-				<filtering>false</filtering><!--不置換資源檔內容,如果要的話見http://maven.apache.org/plugins/maven-resources-plugin/examples/filter.html-->
-				<includes>
-					<include>org/gwtwidgets/Stream.gwt.xml</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include> **/client/*.java </include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/java</directory><!--資源檔存放路徑-->
+                <filtering>false</filtering><!--不置換資源檔內容,如果要的話見http://maven.apache.org/plugins/maven-resources-plugin/examples/filter.html-->
+                <includes>
+                    <include>org/gwtwidgets/Stream.gwt.xml</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/java</directory>
+                <includes>
+                    <include> **/client/*.java </include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
 }}}
 
@@ -341,23 +352,23 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 === 建立可執行Jar ===
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<mainClass>完整類別名稱(有main方法的class)</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>完整類別名稱(有main方法的class)</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 
@@ -365,25 +376,25 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 === 建立單一可執行Jar(把所有Library一起打成一包) ===
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>完整類別名稱(有main方法的class)</mainClass>
-						</manifest>
-					</archive>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>完整類別名稱(有main方法的class)</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 
@@ -391,23 +402,23 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 === 直接執行程式 ===
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<configuration>
-					<executable>java</executable>
-					<arguments>
-						<argument>-classpath</argument>
-						<classpath /> 
-						<argument>完整類別名稱(有main方法的class)</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath /> 
+                        <argument>完整類別名稱(有main方法的class)</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 設定好後便可以以 "mvn exec:exec"執行程式
@@ -420,31 +431,31 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 所以當我們執行 "mvn test" 時，就會先進行 compile然後再執行 "exec:exec"設定如下
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<version>1.2.1</version>
-				<executions>
-					<execution><!--設定Goal的執行方式-->
-						<phase>test</phase><!--將以下Goals關聯到 test Phase-->
-						<goals>
-							<goal>exec</goal> <!--要設定的goal-->
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<executable>java</executable>
-					<arguments>
-						<argument>-classpath</argument>
-						<classpath /> 
-						<argument>完整類別名稱(有main方法的class)</argument>
-					</arguments>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution><!--設定Goal的執行方式-->
+                        <phase>test</phase><!--將以下Goals關聯到 test Phase-->
+                        <goals>
+                            <goal>exec</goal> <!--要設定的goal-->
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-classpath</argument>
+                        <classpath /> 
+                        <argument>完整類別名稱(有main方法的class)</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 
@@ -454,36 +465,36 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 所以必須使用其它的plugin一起將這些資料包進去，並設定關聯到"package" phase
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.1</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<transformers>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<mainClass>完整類別名稱</mainClass>
-								</transformer>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.handlers</resource>
-								</transformer>
-								<transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.schemas</resource>
-								</transformer>
-							</transformers>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>完整類別名稱</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
 
@@ -493,32 +504,93 @@ clean周期負責Project的清理，default周期負責Project的建置而site�
 但是當我們進行單元測試時，開發環境下根本不認識這兩個變數，所以我們必須設定這兩個變數並且將之指到某個特定的目錄下。
 {{{
 <project ...>
-	<build>
-		<plugins>
-			<plugin>
-			  <groupId>org.apache.maven.plugins</groupId>
-			  <artifactId>maven-surefire-plugin</artifactId><!--因為是測試時發生，所以設定這個Plugin-->
-			  <version>2.16</version>
-			  <configuration>
-			    <systemProperties>
-			      <property>
-			        <name>catalina.home</name><!--要設定系統變數名稱-->
-			        <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
-			      </property>
-			      <property>
-			        <name>jboss.server.home.dir</name><!--要設定系統變數名稱-->
-			        <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
-			      </property>
-			    </systemProperties>
-			    <suiteXmlFiles>
-			    	<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile><!--因為我是用testNG，所以指定testNG的設定檔-->
-			    </suiteXmlFiles>
-			  </configuration>
-			</plugin>
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId><!--因為是測試時發生，所以設定這個Plugin-->
+              <version>2.16</version>
+              <configuration>
+                <systemProperties>
+                  <property>
+                    <name>catalina.home</name><!--要設定系統變數名稱-->
+                    <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
+                  </property>
+                  <property>
+                    <name>jboss.server.home.dir</name><!--要設定系統變數名稱-->
+                    <value>${project.build.directory}</value><!--把這個變數指到輸出目錄-->
+                  </property>
+                </systemProperties>
+                <suiteXmlFiles>
+                    <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile><!--因為我是用testNG，所以指定testNG的設定檔-->
+                </suiteXmlFiles>
+              </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
 }}}
+
+=== 資源檔的變數替代 ====
+系統中常常必須要使用一些設定檔例如 .properties 或是 .xml結尾的檔案，常常我們會把一些設定放進裡面，例如資料庫的connection string，
+以便在開發時期使用測試的資料庫而執行時期使用正式的資料庫，或者是某些暫存檔，例如除錯版本時將某些檔案放在本機路徑，而發佈版本時
+則指定到主機路徑。<br/>
+這個需求表示我們須要能夠在設定檔中放入一些[#Project%E8%AE%8A%E6%95%B8 變數]，而這些[#Project%E8%AE%8A%E6%95%B8 變數]的值要能夠在外部(如執行時的參數或是設定在pom.xml內)決定其值，
+一個最簡單而通用的設定如下，預設會把.properties與.xml檔案內的[#Project%E8%AE%8A%E6%95%B8 變數]替換為真正的值)：
+{{{
+<project ...>
+    <build>
+        <resources>
+        <resource>
+            <directory>${basedir}/src/main/resources</directory>
+            <filtering>true</filtering>
+        </resource>
+        </resources>
+        <testResources>
+        <testResource>
+            <directory>${basedir}/src/test/resources</directory>
+            <filtering>true</filtering> 
+        </testResource>
+        </testResources>
+    </build>
+</project>
+}}}
+其中 directory 裝是資源檔的目錄所在，filtering設為true表示裡面的檔案要替換，例如，我常用的Log4j2.xml裡的設定
+{{{
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="${project.artifactId}" verbose="false" monitorInterval="30">
+        <Appenders>
+                <Console name="console">
+                        <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %highlight{%-5level} %class{1.}.%M(%L) - %highlight{%msg}%n%ex{full}%n" />
+                </Console>
+                <RollingRandomAccessFile name="${project.artifactId}-Rolling" fileName="${sys:catalina.home}/logs/${project.artifactId}.log"
+                        filePattern="${sys:catalina.home}/logs/${project.artifactId}-%d{MM-dd-yyyy}-%i.log.gz">
+                        <PatternLayout>
+                                <pattern>%d %p [%t] %C{1.}.%M(%L) %m%n%ex{full}%n</pattern>
+                        </PatternLayout>
+                        <Policies>
+                                <TimeBasedTriggeringPolicy />
+                                <SizeBasedTriggeringPolicy size="250 MB" />
+                        </Policies>
+                </RollingRandomAccessFile>
+                <Async name="Async-${project.artifactId}-Rolling">
+                    <AppenderRef ref="${project.artifactId}-Rolling"/>
+                </Async>
+        </Appenders>
+        <Loggers>
+                <Logger name="com.spring" level="INFO" additivity="false">
+                        <AppenderRef ref="console" />
+                        <AppenderRef ref="${project.artifactId}-Rolling" />
+                </Logger>
+                <Root level="info">
+                        <AppenderRef ref="console" />
+                        <AppenderRef ref="${project.artifactId}-Rolling" />
+                </Root>
+        </Loggers>
+</Configuration>
+}}}
+在執行或打包時裡面的[#Project%E8%AE%8A%E6%95%B8 變數](${project.artifactId})就會被置換為專案名稱。<br/>
+或者我們也可以把變數定義在[#Profile Profile]內，然後在執行 mvn 命令時，指定Profile，以便置換成不同的值。
 
 == 組態管理 ==
 也許您不是一個人寫程式，那麼組態管理(Software Configuration Management)就是必須的，當然也許您的系統已經裝有tortoisesxxx
@@ -574,18 +646,18 @@ scm通常有帳號/密碼的問題，當然直接寫在pom.xml內不是不行，
 maven用久了，您就會發現這個問題：比如說您的pom 同時引用了如下：
 {{{
 <project ...>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.core</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
-	<dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.core</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
+    <dependencies>
 </project>
 }}}
 雖然都是使用了3.0.5版，可是"package"後，您會發現org.springframework.core 怎麼會同時存在3.0.5與3.0.3的jar檔，這是因為spring-security-cor的dependency引用了3.0.3版的org.springframework.core，所以才會同時存在兩個版本。
@@ -621,24 +693,24 @@ BUILD SUCCESS
 所以我們當然想使用新版本，所以必須讓spring-security-core排除引用 org.springframework.core 3.0.3版，設定如下：
 {{{
 <project ...>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>org.springframework.core</artifactId>
-			<version>3.0.5.RELEASE</version>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-security-core</artifactId>
-			<version>3.0.5.RELEASE</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework</groupId>
-					<artifactId>org.springframework.core</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	<dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>org.springframework.core</artifactId>
+            <version>3.0.5.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-security-core</artifactId>
+            <version>3.0.5.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>org.springframework.core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+    <dependencies>
 </project>
 }}}
 再執行一次"mvn dependency:tree"看看引用的library
@@ -680,40 +752,40 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 所以我們設定如下
 {{{
 <project ...>
-	<profiles>
-		<profile>
-			<id>sign</id><!--我們自行命名的Profile-->
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-jarsigner-plugin</artifactId>
-						<version>1.2</version>
-						<executions>
-							<execution>
-								<id>signing</id><!--為執行的作業命名-->
-								<goals>
-									<goal>sign</goal><!--我們要執行的Goal-->
-								</goals>
-								<phase>package</phase><!--在Package的Phase執行這個Goal-->
-								<inherited>true</inherited>
-								<configuration>
-									<archiveDirectory></archiveDirectory>
-									<includes>
-										<include>${project.build.directory}/*.apk</include><!--要簽署的apk-->
-									</includes>
-									<keystore>${somewhare}/keystorefile</keystore><!--key store檔案的所在路徑-->
-									<storepass>key-store_password</storepass><!--Key sotre 的密碼--->
-									<!--keypass>密碼</keypass --> <!-如果使用的key有密碼的話--->
-									<alias>key's alias name</alias><!--加簽所使用的 alias-->
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+            <id>sign</id><!--我們自行命名的Profile-->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jarsigner-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <id>signing</id><!--為執行的作業命名-->
+                                <goals>
+                                    <goal>sign</goal><!--我們要執行的Goal-->
+                                </goals>
+                                <phase>package</phase><!--在Package的Phase執行這個Goal-->
+                                <inherited>true</inherited>
+                                <configuration>
+                                    <archiveDirectory></archiveDirectory>
+                                    <includes>
+                                        <include>${project.build.directory}/*.apk</include><!--要簽署的apk-->
+                                    </includes>
+                                    <keystore>${somewhare}/keystorefile</keystore><!--key store檔案的所在路徑-->
+                                    <storepass>key-store_password</storepass><!--Key sotre 的密碼--->
+                                    <!--keypass>密碼</keypass --> <!-如果使用的key有密碼的話--->
+                                    <alias>key's alias name</alias><!--加簽所使用的 alias-->
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
 }}}
 所以最後要建立發佈的App時，只要執行 "mvn install -Psign"就可以為建立的apk檔案加簽了
@@ -723,49 +795,49 @@ idv.kentyeh.software:firstmaven:jar:1.0-SNAPSHOT
 例如我們在專案下開了兩個目錄TomcatEnv與JbossEnv，裡面各放了一個system.properties，然後打打包專案時，才指定要用那一個檔案。
 {{{
 <project ...>
-	<profiles>
-		<profile>
-	    <id>jboss</id><!--我們自行命名的Profile-->
-	    <activation>
-	    	<activeByDefault>true</activeByDefault>
-	    </activation>
-	    <build>
-	      <plugins>
-	        <plugin>
-	          <groupId>org.apache.maven.plugins</groupId>
-	          <artifactId>maven-war-plugin</artifactId>
-	          <configuration>
-	            <webResources>
-	              <resource>
-	                <directory>JbossEnv</directory><!--引用的資源目錄-->
-	                <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
-	              </resource>
-	            </webResources>
-	          </configuration>
-	        </plugin>
-	      </plugins>
-	    </build>
-		</profile>
-		<profile>
-	    <id>tomcat</id><!--我們自行命名的Profile-->
-	    <build>
-	      <plugins>
-	        <plugin>
-	          <groupId>org.apache.maven.plugins</groupId>
-	          <artifactId>maven-war-plugin</artifactId>
-	          <configuration>
-	            <webResources>
-	              <resource>
-	                <directory>tomcatEnv</directory><!--引用的資源目錄-->
-	                <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
-	              </resource>
-	            </webResources>
-	          </configuration>
-	        </plugin>
-	      </plugins>
-	    </build>
-		</profile>
-	</profiles>
+    <profiles>
+        <profile>
+        <id>jboss</id><!--我們自行命名的Profile-->
+        <activation>
+            <activeByDefault>true</activeByDefault>
+        </activation>
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-war-plugin</artifactId>
+              <configuration>
+                <webResources>
+                  <resource>
+                    <directory>JbossEnv</directory><!--引用的資源目錄-->
+                    <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
+                  </resource>
+                </webResources>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+        </profile>
+        <profile>
+        <id>tomcat</id><!--我們自行命名的Profile-->
+        <build>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-war-plugin</artifactId>
+              <configuration>
+                <webResources>
+                  <resource>
+                    <directory>tomcatEnv</directory><!--引用的資源目錄-->
+                    <targetPath>WEB-INF/classes</targetPath><!--打包時拷貝的目的目錄-->
+                  </resource>
+                </webResources>
+              </configuration>
+            </plugin>
+          </plugins>
+        </build>
+        </profile>
+    </profiles>
 </project>
 }}}
 所以當我們要打包Jboss環境的war檔時，執行 "mvn package -Pjboss"，要打包到tomcat時執行 "mvn package -Ptomcat"
@@ -1222,3 +1294,13 @@ mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/r
 -DarchetypeVersion=0.1.5
 }}}
   }}}
+
+== 執行效率 ==
+Maven 3 可以使用[[https://cwiki.apache.org/confluence/display/MAVEN/Parallel+builds+in+Maven+3 平行處理]方式加速整個執行效率，例如
+{{{
+mvn -T 4 clean install # 以4個執行緒建置
+mvn -T 1C clean install # 每一CPU核心以1個執行緒建置
+mvn -T 1.5C clean install # 每一CPU核心以1.5個執行緒建置
+}}}
+一般來說可提升20-50%的效率, 唯一要考量的是Plugin是否執行緒安全，
+所幸絕大部分都是執行緒安全，我的建議是以 -T 1C 的參數是比較合適。
