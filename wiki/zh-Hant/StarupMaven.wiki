@@ -1293,7 +1293,6 @@ mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/r
 -DarchetypeArtifactId=SpringWebStart \
 -DarchetypeVersion=0.1.5
 }}}
-  }}}
 
 == 執行效率 ==
 Maven 3 可以使用[[https://cwiki.apache.org/confluence/display/MAVEN/Parallel+builds+in+Maven+3 平行處理]方式加速整個執行效率，例如
