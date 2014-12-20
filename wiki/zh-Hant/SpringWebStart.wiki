@@ -17,7 +17,7 @@
 mvn archetype:generate -DarchetypeRepository=http://gwtrepo.googlecode.com/svn/repo \
 -DarchetypeGroupId=com.google.code \
 -DarchetypeArtifactId=SpringWebStart \
--DarchetypeVersion=0.1.9
+-DarchetypeVersion=0.2.0
 }}}
 然後回達一些問題
 {{{
